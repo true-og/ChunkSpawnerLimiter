@@ -16,7 +16,7 @@ import com.cyprias.ChunkSpawnerLimiter.listeners.WorldListener;
 
 public class Plugin extends JavaPlugin {
     private static Plugin instance = null;
-    public static ChunkLogger logger;
+    public static Logger logger;
     public static String chatPrefix = "&4[&bCSL&4]&r ";
 
     public static HashMap<String, Location> deaths = new HashMap<>();
@@ -46,20 +46,16 @@ public class Plugin extends JavaPlugin {
 
 
     }
-    public class ChunkLogger {
-        Logger logger = Plugin.getInstance().getLogger();
 
-        public void debug(String msg){
-            logger.info("[debug] "+msg);
-        }
-
+    public static void debug(String msg){
+        Plugin.logger.info("[debug] "+msg);
     }
 
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
     }
 
-    public static final Plugin getInstance() {
+    public static Plugin getInstance() {
         return instance;
     }
 

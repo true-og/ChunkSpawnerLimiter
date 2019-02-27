@@ -22,7 +22,7 @@ import com.cyprias.ChunkSpawnerLimiter.Plugin;
 import com.cyprias.ChunkSpawnerLimiter.compare.MobGroupCompare;
 
 public class WorldListener implements Listener {
-	HashMap<Chunk, Integer> chunkTasks = new HashMap<Chunk, Integer>();
+	HashMap<Chunk, Integer> chunkTasks = new HashMap<>();
 
 	class inspectTask extends BukkitRunnable {
 		Chunk c;
@@ -32,7 +32,7 @@ public class WorldListener implements Listener {
 
 		@Override
 		public void run() {
-			Logger.debug("Active check " + c.getX() + " " + c.getZ());
+			Plugin.debug("Active check " + c.getX() + " " + c.getZ());
 			if (!c.isLoaded()){
 				Plugin.cancelTask(taskID);
 				return;
@@ -51,7 +51,7 @@ public class WorldListener implements Listener {
 
 	@EventHandler
 	public void onChunkLoadEvent(final ChunkLoadEvent e) {
-		Logger.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+		Plugin.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
 		if (Config.getBoolean("properties.active-inspections")){
 			inspectTask task = new inspectTask(e.getChunk());
 			int taskID = Plugin.scheduleSyncRepeatingTask(task, Config.getInt("properties.inspection-frequency") * 20L);
@@ -66,7 +66,7 @@ public class WorldListener implements Listener {
 
 	@EventHandler
 	public void onChunkUnloadEvent(final ChunkUnloadEvent e) {
-		Logger.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+		Plugin.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
 		
 		if (chunkTasks.containsKey(e.getChunk())){
 			Plugin.getInstance().getServer().getScheduler().cancelTask(chunkTasks.get(e.getChunk()));
@@ -87,10 +87,9 @@ public class WorldListener implements Listener {
 		
 		Entity[] ents = c.getEntities();
 
-		HashMap<String, ArrayList<Entity>> types = new HashMap<String, ArrayList<Entity>>();
+		HashMap<String, ArrayList<Entity>> types = new HashMap<>();
 
 		for (int i = ents.length - 1; i >= 0; i--) {
-			// ents[i].getType();
 			EntityType t = ents[i].getType();
 
 			String eType = t.toString();
@@ -98,13 +97,13 @@ public class WorldListener implements Listener {
 
 			if (Config.contains("entities." + eType)) {
 				if (!types.containsKey(eType))
-					types.put(eType, new ArrayList<Entity>());
+					types.put(eType, new ArrayList<>());
 				types.get(eType).add(ents[i]);
 			}
 
 			if (Config.contains("entities." + eGroup)) {
 				if (!types.containsKey(eGroup))
-					types.put(eGroup, new ArrayList<Entity>());
+					types.put(eGroup, new ArrayList<>());
 				types.get(eGroup).add(ents[i]);
 			}
 		}
@@ -117,7 +116,7 @@ public class WorldListener implements Listener {
 			// entry.getValue().size());
 
 			if (entry.getValue().size() > limit) {
-				Logger.debug("Removing " + (entry.getValue().size() - limit) + " " + eType + " @ " + c.getX() + " " + c.getZ());
+				Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + eType + " @ " + c.getX() + " " + c.getZ());
 
 				if (Config.getBoolean("properties.notify-players")){
 					for (int i = ents.length - 1; i >= 0; i--) {
