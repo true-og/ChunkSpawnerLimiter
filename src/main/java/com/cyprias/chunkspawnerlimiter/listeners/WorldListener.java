@@ -23,7 +23,8 @@ public class WorldListener implements Listener {
     private HashMap<Chunk, Integer> chunkTasks = new HashMap<>();
 
     class inspectTask extends BukkitRunnable {
-        Chunk c;
+        private Chunk c;
+        private int taskID;
 
         public inspectTask(Chunk c) {
             this.c = c;
@@ -36,15 +37,11 @@ public class WorldListener implements Listener {
                 Plugin.cancelTask(taskID);
                 return;
             }
-
             checkChunk(c);
         }
 
-        int taskID;
-
         public void setId(int taskID) {
             this.taskID = taskID;
-
         }
 
     }
@@ -84,9 +81,25 @@ public class WorldListener implements Listener {
         }
 
         Entity[] entities = c.getEntities();
-
         HashMap<String, ArrayList<Entity>> types = new HashMap<>();
 
+        addEntitiesByConfig(entities,types);
+
+        for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
+            String entityType = entry.getKey();
+            int limit = Config.getInt("entities." + entityType);
+            if (entry.getValue().size() > limit) {
+                Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + c.getX() + " " + c.getZ());
+
+                notifyPlayers(entry, entities,limit,entityType);
+
+                for (int i = entry.getValue().size() - 1; i >= limit; i--) {
+                    entry.getValue().get(i).remove();
+                }
+            }
+        }
+    }
+    private static void addEntitiesByConfig(Entity[] entities,HashMap<String, ArrayList<Entity>> types ){
         for (int i = entities.length - 1; i >= 0; i--) {
             EntityType t = entities[i].getType();
 
@@ -106,38 +119,13 @@ public class WorldListener implements Listener {
                 types.get(eGroup).add(entities[i]);
             }
         }
-
-        for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
-            String eType = entry.getKey();
-            int limit = Config.getInt("entities." + eType);
-
-            // Logger.debug(c.getX() + " " + c.getZ() + ": " + eType + " = " +
-            // entry.getValue().size());
-
-            if (entry.getValue().size() > limit) {
-                Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + eType + " @ " + c.getX() + " " + c.getZ());
-
-                notifyPlayers(entry, entities);
-
-                for (int i = entry.getValue().size() - 1; i >= limit; i--) {
-                    entry.getValue().get(i).remove();
-                }
-
-            }
-
-        }
-
-
     }
-
-    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities) {
-        String eType = entry.getKey();
-        int limit = Config.getInt("entities." + eType);
+    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit,String entityType) {
         if (Config.getBoolean("properties.notify-players")) {
             for (int i = entities.length - 1; i >= 0; i--) {
                 if (entities[i] instanceof Player) {
                     Player p = (Player) entities[i];
-                    ChatUtils.send(p, Config.getString("messages.removedEntites", entry.getValue().size() - limit, eType));
+                    ChatUtils.send(p, Config.getString("messages.removedEntites", entry.getValue().size() - limit, entityType));
                 }
             }
         }
