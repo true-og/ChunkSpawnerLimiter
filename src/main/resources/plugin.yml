@@ -1,5 +1,5 @@
-name: ChunkSpawnerLimiter
-main: com.cyprias.ChunkSpawnerLimiter.Plugin
+name: chunkspawnerlimiter
+main: com.cyprias.chunkspawnerlimiter.Plugin
 author: Cyprias
 prefix: "&4[&bCSL&4]&r"
 description: Limit entities in a chunk.
