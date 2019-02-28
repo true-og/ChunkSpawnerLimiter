@@ -1,4 +1,4 @@
-package com.cyprias.ChunkSpawnerLimiter;
+package com.cyprias.chunkspawnerlimiter;
 
 import java.io.File;
 import java.io.FileNotFoundException;

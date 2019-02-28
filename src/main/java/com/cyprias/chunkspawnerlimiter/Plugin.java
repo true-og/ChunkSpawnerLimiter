@@ -1,7 +1,5 @@
-package com.cyprias.ChunkSpawnerLimiter;
+package com.cyprias.chunkspawnerlimiter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -11,8 +9,8 @@ import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.cyprias.ChunkSpawnerLimiter.listeners.EntityListener;
-import com.cyprias.ChunkSpawnerLimiter.listeners.WorldListener;
+import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
+import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 
 public class Plugin extends JavaPlugin {
     private static Plugin instance = null;
@@ -25,15 +23,7 @@ public class Plugin extends JavaPlugin {
         instance = this;
 
         saveDefaultConfig();
-        this.getConfig().options().copyDefaults(true); //Copies keys if they aren't in the file
-        // Check if the config on disk is missing any settings
-        try {
-            Config.checkForMissingProperties();
-        } catch (IOException e4) {
-            e4.printStackTrace();
-        } catch (InvalidConfigurationException e4) {
-            e4.printStackTrace();
-        }
+        this.getConfig().options().header(getName()+" v"+getDescription().getVersion()+" config.yml");
 
         // Register our event listener.
         getServer().getPluginManager().registerEvents(new EntityListener(), this);

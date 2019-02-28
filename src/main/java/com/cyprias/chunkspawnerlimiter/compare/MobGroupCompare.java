@@ -1,4 +1,4 @@
-package com.cyprias.ChunkSpawnerLimiter.compare;
+package com.cyprias.chunkspawnerlimiter.compare;
 
 import org.bukkit.entity.*;
 

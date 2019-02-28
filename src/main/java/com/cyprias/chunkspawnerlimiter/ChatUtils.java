@@ -1,4 +1,4 @@
-package com.cyprias.ChunkSpawnerLimiter;
+package com.cyprias.chunkspawnerlimiter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ChatUtils {
+	private static final String colorCodes;
 
 	public static void broadcast(String format, Object... args) {
 		broadcast(String.format(format, args));
@@ -28,6 +29,7 @@ public class ChatUtils {
 	}
 
 	public static void broadcastRaw(String message) {
+		//ChatColor.translateAlternateColorCodes()
 		message = replaceColorCodes(message);
 		String[] messages = message.split("\n");
 		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -72,17 +74,20 @@ public class ChatUtils {
 	}
 
 	// replace color codes with the colors
+	// use ChatColor.translateAlternateColorCodes() insteaed
+	@Deprecated
 	public static final String replaceColorCodes(String mess) {
 		return mess.replaceAll("(&([" + colorCodes + "]))", "\u00A7$2");
 	}
 
 	// get rid of color codes
+	// use ChatColor.stripColor() instead
+	@Deprecated
 	public static final String cleanColorCodes(String mess) {
 		return mess.replaceAll("(&([" + colorCodes + "]))", "");
 	}
 
-	private static final String colorCodes;
-
+	// TODO: Gets the ChatColor values, just use ChatColor instead
 	static {
 		String string = "";
 		for (ChatColor color : ChatColor.values()) {

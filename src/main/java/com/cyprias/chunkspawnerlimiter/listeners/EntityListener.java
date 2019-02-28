@@ -1,14 +1,13 @@
-package com.cyprias.ChunkSpawnerLimiter.listeners;
+package com.cyprias.chunkspawnerlimiter.listeners;
 
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import com.cyprias.ChunkSpawnerLimiter.Config;
-import com.cyprias.ChunkSpawnerLimiter.Logger;
+import com.cyprias.chunkspawnerlimiter.Config;
+import com.cyprias.chunkspawnerlimiter.Plugin;
 
 public class EntityListener implements Listener {
 
@@ -23,7 +22,7 @@ public class EntityListener implements Listener {
 		String reason = e.getSpawnReason().toString();
 		
 		if (!Config.getBoolean("spawn-reasons."+reason) || !Config.getBoolean("spawn-reasons."+reason)){
-			Logger.debug("Igonring " + e.getEntity().getType().toString() + " due to spawnreason " + reason);
+			Plugin.debug("Igonring " + e.getEntity().getType().toString() + " due to spawnreason " + reason);
 			return;
 		}
 		
@@ -37,7 +36,7 @@ public class EntityListener implements Listener {
 
 		Chunk c = e.getLocation().getChunk();
 
-		WorldListener.CheckChunk(c);
+		WorldListener.checkChunk(c);
 
 		int surrounding = Config.getInt("properties.check-surrounding-chunks");
 
@@ -46,7 +45,7 @@ public class EntityListener implements Listener {
 			for (int x = c.getX() + surrounding; x >= (c.getX() - surrounding); x--) {
 				for (int z = c.getZ() + surrounding; z >= (c.getZ() - surrounding); z--) {
 					// Logger.debug("Checking chunk " + x + " " +z);
-					WorldListener.CheckChunk(w.getChunkAt(x, z));
+					WorldListener.checkChunk(w.getChunkAt(x, z));
 				}
 			}
 
