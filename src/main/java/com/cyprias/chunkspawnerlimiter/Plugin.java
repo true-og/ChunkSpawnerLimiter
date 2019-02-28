@@ -1,12 +1,10 @@
 package com.cyprias.chunkspawnerlimiter;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
@@ -29,12 +27,7 @@ public class Plugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
         getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
-        // Start the Metrics.
-        if (Config.getBoolean("properties.use-metrics")) {
-            Metrics metrics = new Metrics(this);
-        }
-
-
+        Metrics metrics = new Metrics(this);
     }
 
     public static void debug(String msg){
