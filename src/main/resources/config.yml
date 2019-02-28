@@ -1,11 +1,7 @@
-config-version: 1
 properties:
   # Show debug messages.
   debug-messages: false
 
-  # Help the developer know how popular the plugin is.
-  use-metrics: true
-  
   # Check a chunk upon load (ChunkLoadEvent).
   check-chunk-load: false
   
