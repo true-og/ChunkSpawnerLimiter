@@ -8,7 +8,8 @@
     <description>Limit entities in chunks.</description>
 
     <properties>
-        <finalName>${artifactId}-${version}</finalName>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <finalName>${project.artifactId}-${project.version}</finalName>
     </properties>
 
     <build>
