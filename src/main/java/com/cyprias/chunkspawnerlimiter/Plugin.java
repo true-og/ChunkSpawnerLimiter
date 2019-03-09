@@ -1,10 +1,13 @@
 package com.cyprias.chunkspawnerlimiter;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
@@ -13,12 +16,10 @@ import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 public class Plugin extends JavaPlugin {
     private static Plugin instance = null;
     public static Logger logger;
-    public static String chatPrefix = "&4[&bCSL&4]&r ";
-
-    public static HashMap<String, Location> deaths = new HashMap<>();
 
     public void onEnable() {
         instance = this;
+        logger = getLogger();
 
         saveDefaultConfig();
         this.getConfig().options().header(getName()+" v"+getDescription().getVersion()+" config.yml");
@@ -27,7 +28,23 @@ public class Plugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
         getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
+        checkForMissingProperties();
+
         Metrics metrics = new Metrics(this);
+    }
+
+    private File getConfigFromJar(){
+        return new File(getClass().getResource("config.yml").getFile());
+    }
+
+    public void checkForMissingProperties(){
+        FileConfiguration currentConfig = Plugin.getInstance().getConfig();
+        FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(getConfigFromJar());
+
+        for (String property : defaultConfig.getKeys(true)) {
+            if (!currentConfig.contains(property))
+                Plugin.getInstance().getLogger().warning(property + " is missing from your config.yml, using default.");
+        }
     }
 
     public static void debug(String msg){
@@ -43,6 +60,7 @@ public class Plugin extends JavaPlugin {
     }
 
 
+    @Deprecated
     public static int scheduleSyncRepeatingTask(Runnable run, long delay) {
         return scheduleSyncRepeatingTask(run, delay, delay);
     }
