@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -131,9 +133,15 @@ public class WorldListener implements Listener {
             for (int i = entities.length - 1; i >= 0; i--) {
                 if (entities[i] instanceof Player) {
                     Player p = (Player) entities[i];
-                    ChatUtils.send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
+                    send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
                 }
             }
+    }
+
+    private static void send(CommandSender sender, String message) {
+        message = ChatColor.translateAlternateColorCodes('&',message);
+        String[] messages = message.split("\n");
+        sender.sendMessage(messages);
     }
 
 

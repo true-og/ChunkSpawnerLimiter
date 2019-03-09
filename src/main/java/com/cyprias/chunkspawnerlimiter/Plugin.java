@@ -24,7 +24,6 @@ public class Plugin extends JavaPlugin {
         saveDefaultConfig();
         this.getConfig().options().header(getName()+" v"+getDescription().getVersion()+" config.yml");
 
-        // Register our event listener.
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
         getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
@@ -48,7 +47,9 @@ public class Plugin extends JavaPlugin {
     }
 
     public static void debug(String msg){
-        Plugin.logger.info("[debug] "+msg);
+        if(Config.getBoolean("properties.debug-messages")){
+            Plugin.logger.info("[debug] " + msg);
+        }
     }
 
     public void onDisable() {
@@ -65,6 +66,7 @@ public class Plugin extends JavaPlugin {
         return scheduleSyncRepeatingTask(run, delay, delay);
     }
 
+    @Deprecated
     public static int scheduleSyncRepeatingTask(Runnable run, long start, long delay) {
         return instance.getServer().getScheduler().scheduleSyncRepeatingTask(instance, run, start, delay);
     }
