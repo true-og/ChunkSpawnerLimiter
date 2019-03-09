@@ -15,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.cyprias.chunkspawnerlimiter.Config;
 import com.cyprias.chunkspawnerlimiter.Plugin;
