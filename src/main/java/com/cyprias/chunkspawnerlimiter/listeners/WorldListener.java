@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -24,35 +25,11 @@ import org.bukkit.scheduler.BukkitTask;
 public class WorldListener implements Listener {
     private HashMap<Chunk, Integer> chunkTasks = new HashMap<>();
 
-    class inspectTask extends BukkitRunnable {
-        private Chunk c;
-        private int taskID;
-
-        public inspectTask(Chunk c) {
-            this.c = c;
-        }
-
-        @Override
-        public void run() {
-            Plugin.debug("Active check " + c.getX() + " " + c.getZ());
-            if (!c.isLoaded()) {
-                Plugin.cancelTask(taskID);
-                return;
-            }
-            checkChunk(c);
-        }
-
-        public void setId(int taskID) {
-            this.taskID = taskID;
-        }
-
-    }
-
     @EventHandler
     public void onChunkLoadEvent(ChunkLoadEvent e) {
         Plugin.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
         if (Config.getBoolean("properties.active-inspections")) {
-            inspectTask inspectTask = new inspectTask(e.getChunk());
+            InspectTask inspectTask = new InspectTask(e.getChunk());
             long delay = Config.getInt("properties.inspection-frequency") * 20L;
             BukkitTask task = inspectTask.runTaskTimer(Plugin.getInstance(),delay,delay);
             inspectTask.setId(task.getTaskId());
@@ -99,7 +76,7 @@ public class WorldListener implements Listener {
         }
     }
     // return a new entry and set the old one
-    // entry = removeEntities();
+    // entry = removeEntities(); TODO:
     private static void removeEntities(Entry<String, ArrayList<Entity>> entry,int limit){
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
             entry.getValue().get(i).remove();
