@@ -1,4 +1,4 @@
-name: chunkspawnerlimiter
+name: ChunkSpawnerLimiter
 main: com.cyprias.chunkspawnerlimiter.Plugin
 authors: [Cyprias,sarhatabaot]
 prefix: "CSL"
