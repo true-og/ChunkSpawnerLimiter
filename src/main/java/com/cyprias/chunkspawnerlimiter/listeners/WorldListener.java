@@ -116,8 +116,8 @@ public class WorldListener implements Listener {
     }
 
     private static void send(CommandSender sender, String message) {
-        message = ChatColor.translateAlternateColorCodes('&',message);
-        String[] messages = message.split("\n");
+        String newMessage = ChatColor.translateAlternateColorCodes('&',message);
+        String[] messages = newMessage.split("\n");
         sender.sendMessage(messages);
     }
 
