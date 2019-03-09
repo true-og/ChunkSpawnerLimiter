@@ -7,16 +7,17 @@ properties:
   
   # Check a chunk upon unload (ChunkUnloadEvent).
   check-chunk-unload: false
+
+  # When a chunk is loaded, recheck it periodically.
+  # check-chunk-load must be true for this to work.
+  active-inspections: true
   
   # Check a chunk when a mob spawns (CreatureSpawnEvent).
   watch-creature-spawns: true
   
   # Radius of surrounding chunks to check.
   check-surrounding-chunks: 1
-  
-  # When a chunk is loaded, recheck it periodically. 
-  active-inspections: true
-  
+
   # How often, in seconds, to check the chunk.
   inspection-frequency: 300
   
