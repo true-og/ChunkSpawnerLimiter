@@ -1,6 +1,6 @@
 name: chunkspawnerlimiter
 main: com.cyprias.chunkspawnerlimiter.Plugin
-author: Cyprias
-prefix: "&4[&bCSL&4]&r"
+authors: [Cyprias,sarhatabaot]
+prefix: "[CSL]"
 description: Limit entities in a chunk.
-version: 3.0.3
+version: ${project.version}
