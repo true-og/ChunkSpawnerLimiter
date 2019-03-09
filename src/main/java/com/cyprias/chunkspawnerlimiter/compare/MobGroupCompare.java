@@ -2,9 +2,7 @@ package com.cyprias.chunkspawnerlimiter.compare;
 
 import org.bukkit.entity.*;
 
-
 public class MobGroupCompare implements EntityCompare {
-
     private String mobGroup;
 
     public MobGroupCompare(String mobGroup) {
@@ -34,7 +32,7 @@ public class MobGroupCompare implements EntityCompare {
         }
 
         if (entity instanceof WaterMob) {
-            // Squid
+            // Squid, Fish
             return "WATER_MOB";
         }
 

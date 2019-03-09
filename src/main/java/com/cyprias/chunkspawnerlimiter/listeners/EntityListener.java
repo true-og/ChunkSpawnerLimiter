@@ -9,6 +9,10 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import com.cyprias.chunkspawnerlimiter.Config;
 import com.cyprias.chunkspawnerlimiter.Plugin;
 
+/**
+ *
+ * Spawn Reasons at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+ */
 public class EntityListener implements Listener {
 
 	@EventHandler
@@ -21,34 +25,24 @@ public class EntityListener implements Listener {
 
 		String reason = e.getSpawnReason().toString();
 		
-		if (!Config.getBoolean("spawn-reasons."+reason) || !Config.getBoolean("spawn-reasons."+reason)){
-			Plugin.debug("Igonring " + e.getEntity().getType().toString() + " due to spawnreason " + reason);
+		if (!Config.getBoolean("spawn-reasons."+reason)){
+			Plugin.debug("Ignoring " + e.getEntity().getType().toString() + " due to spawn-reason: " + reason);
 			return;
 		}
-		
-		//CreatureSpawnEvent.SpawnReason.
-		
-		// LivingEntity ent = e.getEntity();
 
-		// EntityType t = ent.getType();
-		// String eType = t.toString();
-		// String eGroup = MobGroupCompare.getMobGroup(ent);
+		Chunk chunk = e.getLocation().getChunk();
+		WorldListener.checkChunk(chunk);
+		checkSurroundings(chunk,e.getLocation().getWorld());
+	}
 
-		Chunk c = e.getLocation().getChunk();
-
-		WorldListener.checkChunk(c);
-
+	private void checkSurroundings(Chunk chunk,World world){
 		int surrounding = Config.getInt("properties.check-surrounding-chunks");
-
 		if (surrounding > 0) {
-			World w = e.getLocation().getWorld();
-			for (int x = c.getX() + surrounding; x >= (c.getX() - surrounding); x--) {
-				for (int z = c.getZ() + surrounding; z >= (c.getZ() - surrounding); z--) {
-					// Logger.debug("Checking chunk " + x + " " +z);
-					WorldListener.checkChunk(w.getChunkAt(x, z));
+			for (int x = chunk.getX() + surrounding; x >= (chunk.getX() - surrounding); x--) {
+				for (int z = chunk.getZ() + surrounding; z >= (chunk.getZ() - surrounding); z--) {
+					WorldListener.checkChunk(world.getChunkAt(x, z));
 				}
 			}
-
 		}
 	}
 }

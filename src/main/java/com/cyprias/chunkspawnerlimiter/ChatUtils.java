@@ -15,9 +15,7 @@ public class ChatUtils {
 	public static void broadcast(String message) {
 		message = replaceColorCodes(message);
 		String[] messages = message.split("\n");
-		String prefix = getChatPrefix();
-		for (int cntr = 0; cntr < messages.length; cntr++)
-			messages[cntr] = prefix + messages[cntr];
+		System.arraycopy(messages, 0, messages, 0, messages.length);
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			player.sendMessage(messages);
 		}
@@ -44,9 +42,6 @@ public class ChatUtils {
 		sender.sendMessage(messages);
 	}
 
-	public static void send(CommandSender sender, ChatColor color, String format, Object... args) {
-		sender.sendMessage(color + getChatPrefix() + String.format(format, args));
-	}
 
 	public static void sendRaw(CommandSender sender, ChatColor color, String format, Object... args) {
 		sender.sendMessage(color + String.format(format, args));
@@ -61,29 +56,23 @@ public class ChatUtils {
 	}
 
 
-	public static void error(CommandSender sender, String format, Object... args) {
-		sender.sendMessage(getChatPrefix() + ChatColor.RED + String.format(format, args));
-	}
 
 	public static void errorRaw(CommandSender sender, String format, Object... args) {
 		sender.sendMessage(ChatColor.RED + String.format(format, args));
 	}
 
-	public static final String getChatPrefix() {
-		return replaceColorCodes(Plugin.chatPrefix);
-	}
 
 	// replace color codes with the colors
-	// use ChatColor.translateAlternateColorCodes() insteaed
+	// use ChatColor.translateAlternateColorCodes() instead
 	@Deprecated
-	public static final String replaceColorCodes(String mess) {
+	public static String replaceColorCodes(String mess) {
 		return mess.replaceAll("(&([" + colorCodes + "]))", "\u00A7$2");
 	}
 
 	// get rid of color codes
 	// use ChatColor.stripColor() instead
 	@Deprecated
-	public static final String cleanColorCodes(String mess) {
+	public static String cleanColorCodes(String mess) {
 		return mess.replaceAll("(&([" + colorCodes + "]))", "");
 	}
 

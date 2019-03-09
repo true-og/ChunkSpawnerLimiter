@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -53,7 +54,6 @@ public class WorldListener implements Listener {
             inspectTask task = new inspectTask(e.getChunk());
             int taskID = Plugin.scheduleSyncRepeatingTask(task, Config.getInt("properties.inspection-frequency") * 20L);
             task.setId(taskID);
-
             chunkTasks.put(e.getChunk(), taskID);
         }
 
@@ -81,25 +81,31 @@ public class WorldListener implements Listener {
         }
 
         Entity[] entities = c.getEntities();
-        HashMap<String, ArrayList<Entity>> types = new HashMap<>();
 
-        addEntitiesByConfig(entities,types);
+        HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
             String entityType = entry.getKey();
             int limit = Config.getInt("entities." + entityType);
             if (entry.getValue().size() > limit) {
                 Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + c.getX() + " " + c.getZ());
-
-                notifyPlayers(entry, entities,limit,entityType);
-
-                for (int i = entry.getValue().size() - 1; i >= limit; i--) {
-                    entry.getValue().get(i).remove();
+                if (Config.getBoolean("properties.notify-players")) {
+                    notifyPlayers(entry, entities, limit, entityType);
                 }
+                removeEntities(entry,limit);
             }
         }
     }
-    private static void addEntitiesByConfig(Entity[] entities,HashMap<String, ArrayList<Entity>> types ){
+    // return a new entry and set the old one
+    // entry = removeEntities();
+    private static void removeEntities(Entry<String, ArrayList<Entity>> entry,int limit){
+        for (int i = entry.getValue().size() - 1; i >= limit; i--) {
+            entry.getValue().get(i).remove();
+        }
+    }
+
+    private static HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity[] entities){
+        HashMap<String, ArrayList<Entity>> modifiedTypes = new HashMap<>();
         for (int i = entities.length - 1; i >= 0; i--) {
             EntityType t = entities[i].getType();
 
@@ -107,28 +113,27 @@ public class WorldListener implements Listener {
             String eGroup = MobGroupCompare.getMobGroup(entities[i]);
 
             if (Config.contains("entities." + entityType)) {
-                if (!types.containsKey(entityType))
-                    types.put(entityType, new ArrayList<>());
-
-                types.get(entityType).add(entities[i]);
+                if (!modifiedTypes.containsKey(entityType))
+                    modifiedTypes.put(entityType, new ArrayList<>());
+                modifiedTypes.get(entityType).add(entities[i]);
             }
 
             if (Config.contains("entities." + eGroup)) {
-                if (!types.containsKey(eGroup))
-                    types.put(eGroup, new ArrayList<>());
-                types.get(eGroup).add(entities[i]);
+                if (!modifiedTypes.containsKey(eGroup))
+                    modifiedTypes.put(eGroup, new ArrayList<>());
+                modifiedTypes.get(eGroup).add(entities[i]);
             }
         }
+        return modifiedTypes;
     }
+
     private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit,String entityType) {
-        if (Config.getBoolean("properties.notify-players")) {
             for (int i = entities.length - 1; i >= 0; i--) {
                 if (entities[i] instanceof Player) {
                     Player p = (Player) entities[i];
-                    ChatUtils.send(p, Config.getString("messages.removedEntites", entry.getValue().size() - limit, entityType));
+                    ChatUtils.send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
                 }
             }
-        }
     }
 
 
