@@ -12,15 +12,14 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.ChunkEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.cyprias.chunkspawnerlimiter.ChatUtils;
 import com.cyprias.chunkspawnerlimiter.Config;
 import com.cyprias.chunkspawnerlimiter.Plugin;
 import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
+import org.bukkit.scheduler.BukkitTask;
 
 public class WorldListener implements Listener {
     private HashMap<Chunk, Integer> chunkTasks = new HashMap<>();
@@ -50,13 +49,14 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler
-    public void onChunkLoadEvent(final ChunkLoadEvent e) {
+    public void onChunkLoadEvent(ChunkLoadEvent e) {
         Plugin.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
         if (Config.getBoolean("properties.active-inspections")) {
-            inspectTask task = new inspectTask(e.getChunk());
-            int taskID = Plugin.scheduleSyncRepeatingTask(task, Config.getInt("properties.inspection-frequency") * 20L);
-            task.setId(taskID);
-            chunkTasks.put(e.getChunk(), taskID);
+            inspectTask inspectTask = new inspectTask(e.getChunk());
+            long delay = Config.getInt("properties.inspection-frequency") * 20L;
+            BukkitTask task = inspectTask.runTaskTimer(Plugin.getInstance(),delay,delay);
+            inspectTask.setId(task.getTaskId());
+            chunkTasks.put(e.getChunk(), task.getTaskId());
         }
 
         if (Config.getBoolean("properties.check-chunk-load"))
@@ -64,7 +64,7 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler
-    public void onChunkUnloadEvent(final ChunkUnloadEvent e) {
+    public void onChunkUnloadEvent(ChunkUnloadEvent e) {
         Plugin.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
 
         if (chunkTasks.containsKey(e.getChunk())) {
