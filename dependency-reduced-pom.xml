@@ -4,7 +4,7 @@
   <groupId>ChunkSpawnerLimiter</groupId>
   <artifactId>ChunkSpawnerLimiter</artifactId>
   <name>ChunkSpawnerLimiter</name>
-  <version>4.0.0-1.13.2</version>
+  <version>4.1.1-1.13.2-SNAPSHOT</version>
   <description>Limit entities in chunks.</description>
   <build>
     <resources>

@@ -51,6 +51,25 @@ public class WorldListener implements Listener {
         if (Config.getBoolean("properties.check-chunk-unload"))
             checkChunk(e.getChunk());
     }
+    private static boolean hasCustomName(Entry<String, ArrayList<Entity>> entry){
+        boolean isCustomName = false;
+        for(Entity entity:entry.getValue()){
+            isCustomName = !entity.getCustomName().isEmpty();
+        }
+        return isCustomName;
+    }
+
+    private static boolean hasMetadata(Entry<String, ArrayList<Entity>> entry){
+        for(Entity entity : entry.getValue()){
+            for(String metadata: Config.getStringList("properties.ignore-metadata")) {
+                if (entity.hasMetadata(metadata)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 
     public static void checkChunk(Chunk c) {
@@ -63,6 +82,14 @@ public class WorldListener implements Listener {
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
+            if(hasMetadata(entry)){
+                continue;
+            }
+            if(Config.getBoolean("properties.preserve-name-entities") && hasCustomName(entry)){
+                //TODO:
+                continue;
+            }
+
             String entityType = entry.getKey();
             int limit = Config.getInt("entities." + entityType);
             if (entry.getValue().size() > limit) {
@@ -73,6 +100,7 @@ public class WorldListener implements Listener {
                 removeEntities(entry,limit);
             }
         }
+
     }
     // return a new entry and set the old one
     // entry = removeEntities(); TODO:
