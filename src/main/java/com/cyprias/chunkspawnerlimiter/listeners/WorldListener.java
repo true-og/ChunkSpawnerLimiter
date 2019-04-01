@@ -62,22 +62,6 @@ public class WorldListener implements Listener {
         return isCustomName;
     }
 
-    /**
-     * Use hasMetaData(Entity entity)
-     */
-    @Deprecated
-    private static boolean hasMetadata(Entry<String, ArrayList<Entity>> entry) {
-        for (Entity entity : entry.getValue()) {
-            for (String metadata : Config.getStringList("properties.ignore-metadata")) {
-                if (entity.hasMetadata(metadata)) {
-                    Plugin.debug("HasMetaData-" + metadata + ": " + entity.hasMetadata(metadata));
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private static boolean hasMetaData(Entity entity){
         for (String metadata : Config.getStringList("properties.ignore-metadata")) {
             if (entity.hasMetadata(metadata)) {
@@ -87,7 +71,10 @@ public class WorldListener implements Listener {
         return false;
     }
 
-
+    /**
+     * Checks the chunk for entities, removes entities if over the limit.
+     * @param c     Chunk
+     */
     public static void checkChunk(Chunk c) {
         if (Config.getStringList("excluded-worlds").contains(c.getWorld().getName())) {
             return;
@@ -107,9 +94,6 @@ public class WorldListener implements Listener {
 
             int limit = Config.getInt("entities." + entityType);
 
-            //TODO: Seems to not add "Villager/NPC" to the list.
-            Plugin.debug(entityType + " :limit=" + limit);
-
             if (entry.getValue().size() > limit) {
                 Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + c.getX() + " " + c.getZ());
                 if (Config.getBoolean("properties.notify-players")) {
@@ -120,8 +104,6 @@ public class WorldListener implements Listener {
         }
     }
 
-    // return a new entry and set the old one
-    // entry = removeEntities(); TODO:
     private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
             if(hasMetaData(entry.getValue().get(i)))

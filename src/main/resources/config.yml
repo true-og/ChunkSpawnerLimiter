@@ -24,7 +24,6 @@ properties:
   # Notify players in that chunk if stuff has been culled. 
   notify-players: false
 
-  #TODO:
   # Prioritize entities without names over older entities.
   preserve-named-entities: true
 
