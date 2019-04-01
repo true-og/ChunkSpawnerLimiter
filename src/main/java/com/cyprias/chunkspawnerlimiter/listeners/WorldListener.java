@@ -62,7 +62,10 @@ public class WorldListener implements Listener {
         return isCustomName;
     }
 
-    /* Doesn't work, should be under remove entities.*/
+    /**
+     * Use hasMetaData(Entity entity)
+     */
+    @Deprecated
     private static boolean hasMetadata(Entry<String, ArrayList<Entity>> entry) {
         for (Entity entity : entry.getValue()) {
             for (String metadata : Config.getStringList("properties.ignore-metadata")) {
@@ -91,8 +94,6 @@ public class WorldListener implements Listener {
         }
 
         Entity[] entities = c.getEntities();
-
-        Plugin.debug(c.getX() + " " + c.getZ() + " Entities:" + Debug.Entities(entities));
 
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
