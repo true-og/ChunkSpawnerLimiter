@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.cyprias.chunkspawnerlimiter.debug.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -30,7 +31,7 @@ public class WorldListener implements Listener {
         if (Config.getBoolean("properties.active-inspections")) {
             InspectTask inspectTask = new InspectTask(e.getChunk());
             long delay = Config.getInt("properties.inspection-frequency") * 20L;
-            BukkitTask task = inspectTask.runTaskTimer(Plugin.getInstance(),delay,delay);
+            BukkitTask task = inspectTask.runTaskTimer(Plugin.getInstance(), delay, delay);
             inspectTask.setId(task.getTaskId());
             chunkTasks.put(e.getChunk(), task.getTaskId());
         }
@@ -51,18 +52,22 @@ public class WorldListener implements Listener {
         if (Config.getBoolean("properties.check-chunk-unload"))
             checkChunk(e.getChunk());
     }
-    private static boolean hasCustomName(Entry<String, ArrayList<Entity>> entry){
+
+    // Doesn't quite do what it's supposed to, should check if an entity has a custom name, and if it does, don't remove it.
+    private static boolean hasCustomName(Entry<String, ArrayList<Entity>> entry) {
         boolean isCustomName = false;
-        for(Entity entity:entry.getValue()){
+        for (Entity entity : entry.getValue()) {
             isCustomName = !entity.getCustomName().isEmpty();
         }
         return isCustomName;
     }
 
-    private static boolean hasMetadata(Entry<String, ArrayList<Entity>> entry){
-        for(Entity entity : entry.getValue()){
-            for(String metadata: Config.getStringList("properties.ignore-metadata")) {
+    /* Doesn't work, should be under remove entities.*/
+    private static boolean hasMetadata(Entry<String, ArrayList<Entity>> entry) {
+        for (Entity entity : entry.getValue()) {
+            for (String metadata : Config.getStringList("properties.ignore-metadata")) {
                 if (entity.hasMetadata(metadata)) {
+                    Plugin.debug("HasMetaData-" + metadata + ": " + entity.hasMetadata(metadata));
                     return true;
                 }
             }
@@ -70,6 +75,14 @@ public class WorldListener implements Listener {
         return false;
     }
 
+    private static boolean hasMetaData(Entity entity){
+        for (String metadata : Config.getStringList("properties.ignore-metadata")) {
+            if (entity.hasMetadata(metadata)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     public static void checkChunk(Chunk c) {
@@ -79,43 +92,49 @@ public class WorldListener implements Listener {
 
         Entity[] entities = c.getEntities();
 
+        Plugin.debug(c.getX() + " " + c.getZ() + " Entities:" + Debug.Entities(entities));
+
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
-            if(hasMetadata(entry)){
-                continue;
-            }
-            if(Config.getBoolean("properties.preserve-name-entities") && hasCustomName(entry)){
-                //TODO:
+            if (Config.getBoolean("properties.preserve-name-entities") && hasCustomName(entry)) {
+                //TODO: Still doesn't work - hasCustomName should just include the Config check
                 continue;
             }
 
             String entityType = entry.getKey();
+
             int limit = Config.getInt("entities." + entityType);
+
+            //TODO: Seems to not add "Villager/NPC" to the list.
+            Plugin.debug(entityType + " :limit=" + limit);
+
             if (entry.getValue().size() > limit) {
                 Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + c.getX() + " " + c.getZ());
                 if (Config.getBoolean("properties.notify-players")) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
-                removeEntities(entry,limit);
+                removeEntities(entry, limit);
             }
         }
-
     }
+
     // return a new entry and set the old one
     // entry = removeEntities(); TODO:
-    private static void removeEntities(Entry<String, ArrayList<Entity>> entry,int limit){
+    private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
+            if(hasMetaData(entry.getValue().get(i)))
+                continue;
             entry.getValue().get(i).remove();
         }
     }
 
-    private static HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity[] entities){
+    private static HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity[] entities) {
         HashMap<String, ArrayList<Entity>> modifiedTypes = new HashMap<>();
         for (int i = entities.length - 1; i >= 0; i--) {
-            EntityType t = entities[i].getType();
+            EntityType type = entities[i].getType();
 
-            String entityType = t.toString();
+            String entityType = type.name();
             String eGroup = MobGroupCompare.getMobGroup(entities[i]);
 
             if (Config.contains("entities." + entityType)) {
@@ -133,17 +152,17 @@ public class WorldListener implements Listener {
         return modifiedTypes;
     }
 
-    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit,String entityType) {
-            for (int i = entities.length - 1; i >= 0; i--) {
-                if (entities[i] instanceof Player) {
-                    Player p = (Player) entities[i];
-                    send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
-                }
+    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit, String entityType) {
+        for (int i = entities.length - 1; i >= 0; i--) {
+            if (entities[i] instanceof Player) {
+                Player p = (Player) entities[i];
+                send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
             }
+        }
     }
 
     private static void send(CommandSender sender, String message) {
-        String newMessage = ChatColor.translateAlternateColorCodes('&',message);
+        String newMessage = ChatColor.translateAlternateColorCodes('&', message);
         String[] messages = newMessage.split("\n");
         sender.sendMessage(messages);
     }
