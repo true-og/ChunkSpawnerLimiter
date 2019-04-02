@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.cyprias.chunkspawnerlimiter.debug.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;

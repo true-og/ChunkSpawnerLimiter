@@ -11,18 +11,18 @@ import java.util.Map;
  * @author sarhatabaot
  */
 public class Debug {
-    public static String HashMap(HashMap<String, ArrayList<Entity>> map){
+    public static String hashMap(HashMap<String, ArrayList<Entity>> map){
         StringBuilder sb = new StringBuilder();
         for(Map.Entry<String,ArrayList<Entity>> entry: map.entrySet()){
             sb.append(entry.getKey());
             sb.append(": ");
-            sb.append(ArrayList(entry.getValue()));
+            sb.append(arrayList(entry.getValue()));
             sb.append("\n");
         }
         return StringUtils.removeEnd(sb.toString(),"\n");
     }
 
-    public static String HashMapKeys(HashMap<String, ArrayList<Entity>> map){
+    public static String hashMapKeys(HashMap<String, ArrayList<Entity>> map){
         StringBuilder sb = new StringBuilder();
         for(Map.Entry<String,ArrayList<Entity>> entry: map.entrySet()){
             sb.append(entry.getKey());
@@ -31,7 +31,7 @@ public class Debug {
         return StringUtils.removeEnd(sb.toString(),",");
     }
 
-    private static String ArrayList(ArrayList<Entity> list){
+    private static String arrayList(ArrayList<Entity> list){
         StringBuilder sb = new StringBuilder();
         for(Entity entity : list){
             sb.append(entity.getName());
@@ -40,7 +40,7 @@ public class Debug {
         return StringUtils.removeEnd(sb.toString(),", ");
     }
 
-    public static String Entities(Entity[] entities){
+    public static String entities(Entity[] entities){
         StringBuilder sb = new StringBuilder();
         for (Entity entity: entities){
             sb.append(entity.getType().name());
