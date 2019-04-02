@@ -52,24 +52,10 @@ public class WorldListener implements Listener {
             checkChunk(e.getChunk());
     }
 
-    private static boolean hasCustomName(Entity entity) {
-        if (Config.getBoolean("properties.preserve-name-entities"))
-            return !entity.getCustomName().isEmpty();
-        return false;
-    }
-
-    private static boolean hasMetaData(Entity entity){
-        for (String metadata : Config.getStringList("properties.ignore-metadata")) {
-            if (entity.hasMetadata(metadata)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Checks the chunk for entities, removes entities if over the limit.
-     * @param c     Chunk
+     *
+     * @param c Chunk
      */
     public static void checkChunk(Chunk c) {
         if (Config.getStringList("excluded-worlds").contains(c.getWorld().getName())) {
@@ -77,7 +63,6 @@ public class WorldListener implements Listener {
         }
 
         Entity[] entities = c.getEntities();
-
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
@@ -94,11 +79,26 @@ public class WorldListener implements Listener {
         }
     }
 
+    private static boolean hasCustomName(Entity entity) {
+        if (Config.getBoolean("properties.preserve-name-entities"))
+            return !entity.getCustomName().isEmpty();
+        return false;
+    }
+
+    private static boolean hasMetaData(Entity entity) {
+        for (String metadata : Config.getStringList("properties.ignore-metadata")) {
+            if (entity.hasMetadata(metadata)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
-            if(hasMetaData(entry.getValue().get(i)))
+            if (hasMetaData(entry.getValue().get(i)))
                 continue;
-            if(hasCustomName(entry.getValue().get(i)))
+            if (hasCustomName(entry.getValue().get(i)))
                 continue;
             entry.getValue().get(i).remove();
         }
