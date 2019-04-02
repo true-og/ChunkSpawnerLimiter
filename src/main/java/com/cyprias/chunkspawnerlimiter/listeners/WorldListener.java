@@ -53,13 +53,10 @@ public class WorldListener implements Listener {
             checkChunk(e.getChunk());
     }
 
-    // Doesn't quite do what it's supposed to, should check if an entity has a custom name, and if it does, don't remove it.
-    private static boolean hasCustomName(Entry<String, ArrayList<Entity>> entry) {
-        boolean isCustomName = false;
-        for (Entity entity : entry.getValue()) {
-            isCustomName = !entity.getCustomName().isEmpty();
-        }
-        return isCustomName;
+    private static boolean hasCustomName(Entity entity) {
+        if (Config.getBoolean("properties.preserve-name-entities"))
+            return !entity.getCustomName().isEmpty();
+        return false;
     }
 
     private static boolean hasMetaData(Entity entity){
@@ -85,13 +82,7 @@ public class WorldListener implements Listener {
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
-            if (Config.getBoolean("properties.preserve-name-entities") && hasCustomName(entry)) {
-                //TODO: Still doesn't work - hasCustomName should just include the Config check
-                continue;
-            }
-
             String entityType = entry.getKey();
-
             int limit = Config.getInt("entities." + entityType);
 
             if (entry.getValue().size() > limit) {
@@ -107,6 +98,8 @@ public class WorldListener implements Listener {
     private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
             if(hasMetaData(entry.getValue().get(i)))
+                continue;
+            if(hasCustomName(entry.getValue().get(i)))
                 continue;
             entry.getValue().get(i).remove();
         }
