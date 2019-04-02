@@ -10,7 +10,7 @@ import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 
 public class Plugin extends JavaPlugin {
     private static Plugin instance = null;
-    public static Logger logger;
+    private static Logger logger;
 
     public void onEnable() {
         instance = this;

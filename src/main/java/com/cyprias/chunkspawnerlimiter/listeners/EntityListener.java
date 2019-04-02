@@ -15,34 +15,34 @@ import com.cyprias.chunkspawnerlimiter.Plugin;
  */
 public class EntityListener implements Listener {
 
-	@EventHandler
-	public void onCreatureSpawnEvent(CreatureSpawnEvent e) {
-		if (e.isCancelled())
-			return;
+    @EventHandler
+    public void onCreatureSpawnEvent(CreatureSpawnEvent e) {
+        if (e.isCancelled())
+            return;
 
-		if (!Config.getBoolean("properties.watch-creature-spawns") )
-			return;
+        if (!Config.getBoolean("properties.watch-creature-spawns") )
+            return;
 
-		String reason = e.getSpawnReason().toString();
-		
-		if (!Config.getBoolean("spawn-reasons."+reason)){
-			Plugin.debug("Ignoring " + e.getEntity().getType().toString() + " due to spawn-reason: " + reason);
-			return;
-		}
+        String reason = e.getSpawnReason().toString();
 
-		Chunk chunk = e.getLocation().getChunk();
-		WorldListener.checkChunk(chunk);
-		checkSurroundings(chunk,e.getLocation().getWorld());
-	}
+        if (!Config.getBoolean("spawn-reasons."+reason)){
+            Plugin.debug("Ignoring " + e.getEntity().getType().toString() + " due to spawn-reason: " + reason);
+            return;
+        }
 
-	private void checkSurroundings(Chunk chunk,World world){
-		int surrounding = Config.getInt("properties.check-surrounding-chunks");
-		if (surrounding > 0) {
-			for (int x = chunk.getX() + surrounding; x >= (chunk.getX() - surrounding); x--) {
-				for (int z = chunk.getZ() + surrounding; z >= (chunk.getZ() - surrounding); z--) {
-					WorldListener.checkChunk(world.getChunkAt(x, z));
-				}
-			}
-		}
-	}
+        Chunk chunk = e.getLocation().getChunk();
+        WorldListener.checkChunk(chunk);
+        checkSurroundings(chunk,e.getLocation().getWorld());
+    }
+
+    private void checkSurroundings(Chunk chunk,World world){
+        int surrounding = Config.getInt("properties.check-surrounding-chunks");
+        if (surrounding > 0) {
+            for (int x = chunk.getX() + surrounding; x >= (chunk.getX() - surrounding); x--) {
+                for (int z = chunk.getZ() + surrounding; z >= (chunk.getZ() - surrounding); z--) {
+                    WorldListener.checkChunk(world.getChunkAt(x, z));
+                }
+            }
+        }
+    }
 }

@@ -30,7 +30,7 @@ public class WorldListener implements Listener {
         if (Config.getBoolean("properties.active-inspections")) {
             InspectTask inspectTask = new InspectTask(e.getChunk());
             long delay = Config.getInt("properties.inspection-frequency") * 20L;
-            BukkitTask task = inspectTask.runTaskTimer(Plugin.getInstance(),delay,delay);
+            BukkitTask task = inspectTask.runTaskTimer(Plugin.getInstance(), delay, delay);
             inspectTask.setId(task.getTaskId());
             chunkTasks.put(e.getChunk(), task.getTaskId());
         }
@@ -52,42 +52,64 @@ public class WorldListener implements Listener {
             checkChunk(e.getChunk());
     }
 
-
+    /**
+     * Checks the chunk for entities, removes entities if over the limit.
+     *
+     * @param c Chunk
+     */
     public static void checkChunk(Chunk c) {
         if (Config.getStringList("excluded-worlds").contains(c.getWorld().getName())) {
             return;
         }
 
         Entity[] entities = c.getEntities();
-
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
             String entityType = entry.getKey();
             int limit = Config.getInt("entities." + entityType);
+
             if (entry.getValue().size() > limit) {
                 Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + c.getX() + " " + c.getZ());
                 if (Config.getBoolean("properties.notify-players")) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
-                removeEntities(entry,limit);
+                removeEntities(entry, limit);
             }
         }
     }
-    // return a new entry and set the old one
-    // entry = removeEntities(); TODO:
-    private static void removeEntities(Entry<String, ArrayList<Entity>> entry,int limit){
+
+    private static boolean hasCustomName(Entity entity) {
+        if (Config.getBoolean("properties.preserve-name-entities"))
+            return !entity.getCustomName().isEmpty();
+        return false;
+    }
+
+    private static boolean hasMetaData(Entity entity) {
+        for (String metadata : Config.getStringList("properties.ignore-metadata")) {
+            if (entity.hasMetadata(metadata)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
+            if (hasMetaData(entry.getValue().get(i)))
+                continue;
+            if (hasCustomName(entry.getValue().get(i)))
+                continue;
             entry.getValue().get(i).remove();
         }
     }
 
-    private static HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity[] entities){
+    private static HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity[] entities) {
         HashMap<String, ArrayList<Entity>> modifiedTypes = new HashMap<>();
         for (int i = entities.length - 1; i >= 0; i--) {
-            EntityType t = entities[i].getType();
+            EntityType type = entities[i].getType();
 
-            String entityType = t.toString();
+            String entityType = type.name();
             String eGroup = MobGroupCompare.getMobGroup(entities[i]);
 
             if (Config.contains("entities." + entityType)) {
@@ -105,17 +127,17 @@ public class WorldListener implements Listener {
         return modifiedTypes;
     }
 
-    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit,String entityType) {
-            for (int i = entities.length - 1; i >= 0; i--) {
-                if (entities[i] instanceof Player) {
-                    Player p = (Player) entities[i];
-                    send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
-                }
+    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit, String entityType) {
+        for (int i = entities.length - 1; i >= 0; i--) {
+            if (entities[i] instanceof Player) {
+                Player p = (Player) entities[i];
+                send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
             }
+        }
     }
 
     private static void send(CommandSender sender, String message) {
-        String newMessage = ChatColor.translateAlternateColorCodes('&',message);
+        String newMessage = ChatColor.translateAlternateColorCodes('&', message);
         String[] messages = newMessage.split("\n");
         sender.sendMessage(messages);
     }

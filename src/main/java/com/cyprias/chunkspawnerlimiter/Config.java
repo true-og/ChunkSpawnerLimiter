@@ -3,6 +3,9 @@ package com.cyprias.chunkspawnerlimiter;
 import java.util.List;
 
 public class Config {
+	public static Object get(String property){
+		return Plugin.getInstance().getConfig().get(property);
+	}
 	public static boolean getBoolean(String property) {
 		return Plugin.getInstance().getConfig().getBoolean(property);
 	}
