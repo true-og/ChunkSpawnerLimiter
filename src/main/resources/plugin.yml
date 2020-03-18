@@ -4,3 +4,7 @@ authors: [Cyprias,sarhatabaot]
 prefix: "CSL"
 description: Limit entities in a chunk.
 version: ${project.version}
+commands:
+  cslreload:
+    description: "Reloads the config file."
+    permission: "csl.reload"

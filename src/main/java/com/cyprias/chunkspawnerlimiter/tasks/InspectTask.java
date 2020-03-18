@@ -1,33 +1,29 @@
 package com.cyprias.chunkspawnerlimiter.tasks;
 
-import com.cyprias.chunkspawnerlimiter.Plugin;
+import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
+import com.cyprias.chunkspawnerlimiter.Common;
+import lombok.Setter;
 import org.bukkit.Chunk;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static com.cyprias.chunkspawnerlimiter.listeners.WorldListener.checkChunk;
 
-/**
- * @author sarhatabaot
- */
 public class InspectTask extends BukkitRunnable {
-    private Chunk c;
-    private int taskID;
+    private Chunk chunk;
+    @Setter
+    private int id;
 
-    public InspectTask(Chunk c) {
-        this.c = c;
+    public InspectTask(Chunk chunk) {
+        this.chunk = chunk;
     }
 
     @Override
     public void run() {
-        Plugin.debug("Active check " + c.getX() + " " + c.getZ());
-        if (!c.isLoaded()) {
-            Plugin.cancelTask(taskID);
+        Common.debug("Active check " + chunk.getX() + " " + chunk.getZ());
+        if (!chunk.isLoaded()) {
+            ChunkSpawnerLimiter.cancelTask(id);
             return;
         }
-        checkChunk(c);
-    }
-
-    public void setId(int taskID) {
-        this.taskID = taskID;
+        checkChunk(chunk);
     }
 }

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.cyprias.chunkspawnerlimiter.Common;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -17,60 +17,65 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.cyprias.chunkspawnerlimiter.Config;
-import com.cyprias.chunkspawnerlimiter.Plugin;
+import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
 import org.bukkit.scheduler.BukkitTask;
 
 public class WorldListener implements Listener {
+    private ChunkSpawnerLimiter plugin;
     private HashMap<Chunk, Integer> chunkTasks = new HashMap<>();
+
+    public WorldListener(final ChunkSpawnerLimiter plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onChunkLoadEvent(ChunkLoadEvent e) {
-        Plugin.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
-        if (Config.getBoolean("properties.active-inspections")) {
+        Common.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+        if (Config.Properties.ACTIVE_INSPECTIONS) {
             InspectTask inspectTask = new InspectTask(e.getChunk());
-            long delay = Config.getInt("properties.inspection-frequency") * 20L;
-            BukkitTask task = inspectTask.runTaskTimer(Plugin.getInstance(), delay, delay);
+            long delay = Config.Properties.INSPECTION_FREQUENCY * 20L;
+            BukkitTask task = inspectTask.runTaskTimer(plugin, delay, delay);
             inspectTask.setId(task.getTaskId());
             chunkTasks.put(e.getChunk(), task.getTaskId());
         }
 
-        if (Config.getBoolean("properties.check-chunk-load"))
+        if (Config.Properties.CHECK_CHUNK_LOAD)
             checkChunk(e.getChunk());
     }
 
     @EventHandler
     public void onChunkUnloadEvent(ChunkUnloadEvent e) {
-        Plugin.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+        Common.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
 
         if (chunkTasks.containsKey(e.getChunk())) {
-            Plugin.getInstance().getServer().getScheduler().cancelTask(chunkTasks.get(e.getChunk()));
+            Bukkit.getServer().getScheduler().cancelTask(chunkTasks.get(e.getChunk()));
             chunkTasks.remove(e.getChunk());
         }
 
-        if (Config.getBoolean("properties.check-chunk-unload"))
+        if (Config.Properties.CHECK_CHUNK_UNLOAD)
             checkChunk(e.getChunk());
     }
 
     /**
      * Checks the chunk for entities, removes entities if over the limit.
      *
-     * @param c Chunk
+     * @param chunk Chunk
      */
-    public static void checkChunk(Chunk c) {
-        if (Config.getStringList("excluded-worlds").contains(c.getWorld().getName())) {
+    public static void checkChunk(Chunk chunk) {
+        if (Config.getStringList("excluded-worlds").contains(chunk.getWorld().getName())) {
             return;
         }
 
-        Entity[] entities = c.getEntities();
+        Entity[] entities = chunk.getEntities();
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
             String entityType = entry.getKey();
-            int limit = Config.getInt("entities." + entityType);
+            int limit = Config.getEntityLimit(entityType);
 
             if (entry.getValue().size() > limit) {
-                Plugin.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + c.getX() + " " + c.getZ());
+                Common.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + chunk.getX() + " " + chunk.getZ());
                 if (Config.getBoolean("properties.notify-players")) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
@@ -80,7 +85,7 @@ public class WorldListener implements Listener {
     }
 
     private static boolean hasCustomName(Entity entity) {
-        if (Config.getBoolean("properties.preserve-name-entities"))
+        if (Config.Properties.PRESERVE_NAMED_ENTITIES)
             return !entity.getCustomName().isEmpty();
         return false;
     }
@@ -96,9 +101,7 @@ public class WorldListener implements Listener {
 
     private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
-            if (hasMetaData(entry.getValue().get(i)))
-                continue;
-            if (hasCustomName(entry.getValue().get(i)))
+            if (hasMetaData(entry.getValue().get(i)) || hasCustomName(entry.getValue().get(i)))
                 continue;
             entry.getValue().get(i).remove();
         }
@@ -130,17 +133,9 @@ public class WorldListener implements Listener {
     private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit, String entityType) {
         for (int i = entities.length - 1; i >= 0; i--) {
             if (entities[i] instanceof Player) {
-                Player p = (Player) entities[i];
-                send(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
+                final Player p = (Player) entities[i];
+                Common.tell(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
             }
         }
     }
-
-    private static void send(CommandSender sender, String message) {
-        String newMessage = ChatColor.translateAlternateColorCodes('&', message);
-        String[] messages = newMessage.split("\n");
-        sender.sendMessage(messages);
-    }
-
-
 }
