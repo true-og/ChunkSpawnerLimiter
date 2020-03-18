@@ -7,6 +7,7 @@ prefix: "CSL"
 description: Limit entities in a chunk.
 website: ${project.url}
 version: ${project.version}
+load: POSTWORLD
 commands:
   cslreload:
     description: "Reloads the config file."
