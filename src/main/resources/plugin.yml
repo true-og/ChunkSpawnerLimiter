@@ -1,6 +1,13 @@
 name: ChunkSpawnerLimiter
-main: com.cyprias.chunkspawnerlimiter.Plugin
-authors: [Cyprias,sarhatabaot]
+main: com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter
+author: Cyprias
+authors: [sarhatabaot]
+api-version: "1.13"
 prefix: "CSL"
 description: Limit entities in a chunk.
+website: ${project.url}
 version: ${project.version}
+commands:
+  cslreload:
+    description: "Reloads the config file."
+    permission: "csl.reload"
