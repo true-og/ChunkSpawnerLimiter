@@ -16,7 +16,7 @@ public class Common {
 
 	public static void debug(String message) {
 		if(Config.Properties.DEBUG_MESSAGES){
-			ChunkSpawnerLimiter.getLogger().info("DEBUG " + message);
+			ChunkSpawnerLimiter.getInstance().getLogger().info("DEBUG " + message);
 		}
 	}
 

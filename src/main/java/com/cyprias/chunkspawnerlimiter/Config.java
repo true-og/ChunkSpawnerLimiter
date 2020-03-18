@@ -5,13 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.List;
 
 public class Config {
-	private static ChunkSpawnerLimiter plugin;
 
-	public Config(final ChunkSpawnerLimiter plugin) {
-		Config.plugin = plugin;
-	}
-
-	private static FileConfiguration config = plugin.getConfig();
+	private static FileConfiguration config = ChunkSpawnerLimiter.getInstance().getConfig();
 	public static List<String> EXCLUDED_WORLDS = config.getStringList("excluded-worlds");
 
 	public static class Properties {

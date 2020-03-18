@@ -3,9 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ChunkSpawnerLimiter</groupId>
     <artifactId>ChunkSpawnerLimiter</artifactId>
-    <version>4.1.3</version>
+    <version>4.1.4</version>
     <name>ChunkSpawnerLimiter</name>
     <description>Limit entities in chunks.</description>
+    <url>https://github.com/sarhatabaot/ChunkSpawnerLimiter</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,7 +18,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.2</version>
                 <configuration>
                     <minimizeJar>true</minimizeJar>
                     <relocations>
@@ -39,7 +40,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
                 <configuration>
                     <finalName>${finalName}</finalName>
                 </configuration>
@@ -75,8 +76,8 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
             <version>1.14.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -91,7 +92,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.12</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

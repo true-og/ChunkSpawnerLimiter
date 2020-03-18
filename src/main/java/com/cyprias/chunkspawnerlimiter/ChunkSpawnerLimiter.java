@@ -17,14 +17,10 @@ import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 public class ChunkSpawnerLimiter extends JavaPlugin {
     @Getter @Setter
     private static ChunkSpawnerLimiter instance;
-    @Setter @Getter
-    private static Logger logger;
 
     @Override
     public void onEnable() {
         setInstance(this);
-        setLogger(getLogger());
-
         saveDefaultConfig();
         registerListeners();
         getCommand("cslreload").setExecutor(this);
@@ -32,10 +28,11 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
         new Metrics(this,4195);
     }
 
+
+
     @Override
     public void onDisable() {
         setInstance(null);
-        setLogger(null);
         getServer().getScheduler().cancelTasks(this);
     }
 

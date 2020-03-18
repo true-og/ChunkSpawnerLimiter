@@ -2,6 +2,7 @@ package com.cyprias.chunkspawnerlimiter.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.cyprias.chunkspawnerlimiter.Common;
@@ -86,7 +87,7 @@ public class WorldListener implements Listener {
 
     private static boolean hasCustomName(Entity entity) {
         if (Config.Properties.PRESERVE_NAMED_ENTITIES)
-            return !entity.getCustomName().isEmpty();
+            return entity.getCustomName()!=null;
         return false;
     }
 
@@ -129,6 +130,7 @@ public class WorldListener implements Listener {
         }
         return modifiedTypes;
     }
+
 
     private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit, String entityType) {
         for (int i = entities.length - 1; i >= 0; i--) {
