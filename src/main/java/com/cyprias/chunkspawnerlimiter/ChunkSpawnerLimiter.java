@@ -48,6 +48,7 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if(sender.hasPermission("csl.reload")) {
             reloadConfig();
+            Config.reload();
             sender.sendMessage(Common.colorize("[CSL] Reloaded config."));
             return true;
         }

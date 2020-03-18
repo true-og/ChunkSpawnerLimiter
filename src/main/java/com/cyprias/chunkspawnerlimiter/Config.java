@@ -6,6 +6,11 @@ import java.util.List;
 
 public class Config {
 
+
+	public static void reload(){
+		config = ChunkSpawnerLimiter.getInstance().getConfig();
+	}
+
 	private static FileConfiguration config = ChunkSpawnerLimiter.getInstance().getConfig();
 	public static List<String> EXCLUDED_WORLDS = config.getStringList("excluded-worlds");
 
