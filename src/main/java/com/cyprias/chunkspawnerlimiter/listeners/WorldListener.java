@@ -102,7 +102,7 @@ public class WorldListener implements Listener {
 
     private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
-            if (hasMetaData(entry.getValue().get(i)) || hasCustomName(entry.getValue().get(i)))
+            if (hasMetaData(entry.getValue().get(i)) || hasCustomName(entry.getValue().get(i)) || (entry.getValue().get(i) instanceof Player))
                 continue;
             entry.getValue().get(i).remove();
         }
