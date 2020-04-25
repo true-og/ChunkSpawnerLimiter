@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import com.cyprias.chunkspawnerlimiter.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -20,13 +21,10 @@ import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
 import org.bukkit.scheduler.BukkitTask;
 
+@RequiredArgsConstructor
 public class WorldListener implements Listener {
-    private ChunkSpawnerLimiter plugin;
+    private final ChunkSpawnerLimiter plugin;
     private HashMap<Chunk, Integer> chunkTasks = new HashMap<>();
-
-    public WorldListener(final ChunkSpawnerLimiter plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onChunkLoadEvent(ChunkLoadEvent e) {
