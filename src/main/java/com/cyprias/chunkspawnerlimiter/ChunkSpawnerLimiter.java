@@ -1,7 +1,5 @@
 package com.cyprias.chunkspawnerlimiter;
 
-import java.util.logging.Logger;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.bstats.bukkit.Metrics;
@@ -15,50 +13,46 @@ import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
 import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 
 public class ChunkSpawnerLimiter extends JavaPlugin {
-    @Getter @Setter
-    private static ChunkSpawnerLimiter instance;
+	@Getter
+	@Setter
+	private static ChunkSpawnerLimiter instance;
 
-    @Override
-    public void onEnable() {
-        setInstance(this);
-        saveDefaultConfig();
-        registerListeners();
-        getCommand("cslreload").setExecutor(this);
+	@Override
+	public void onEnable() {
+		setInstance(this);
+		saveDefaultConfig();
+		registerListeners();
+		getCommand("cslreload").setExecutor(this);
 
-        new Metrics(this,4195);
-    }
-
-
-
-    @Override
-    public void onDisable() {
-        setInstance(null);
-        getServer().getScheduler().cancelTasks(this);
-    }
+		new Metrics(this, 4195);
+	}
 
 
-    private void registerListeners(){
-        PluginManager manager = Bukkit.getPluginManager();
-        manager.registerEvents(new EntityListener(),this);
-        manager.registerEvents(new WorldListener(this),this);
-        Common.debug("Registered listeners.");
-    }
+	@Override
+	public void onDisable() {
+		setInstance(null);
+		getServer().getScheduler().cancelTasks(this);
+	}
 
-    @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if(sender.hasPermission("csl.reload")) {
-            reloadConfig();
-            Config.reload();
-            sender.sendMessage(Common.colorize("[CSL] Reloaded config."));
-            return true;
-        }
-        sender.sendMessage(Common.colorize(String.format("[CSL] You do not have the &6%s permission.", command.getPermission())));
-        return false;
-    }
 
-    public static void cancelTask(int taskID) {
-        instance.getServer().getScheduler().cancelTask(taskID);
-    }
+	private void registerListeners() {
+		PluginManager manager = getServer().getPluginManager();
+		manager.registerEvents(new EntityListener(), this);
+		manager.registerEvents(new WorldListener(this), this);
+		ChatUtil.debug("Registered listeners.");
+	}
+
+	@Override
+	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+		reloadConfig();
+		Config.reload();
+		sender.sendMessage(ChatUtil.colorize(Config.Messages.RELOADED_CONFIG));
+		return true;
+	}
+
+	public static void cancelTask(int taskID) {
+		Bukkit.getServer().getScheduler().cancelTask(taskID);
+	}
 
 
 }
