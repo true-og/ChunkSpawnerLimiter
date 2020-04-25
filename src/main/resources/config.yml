@@ -95,3 +95,4 @@ excluded-worlds: []
 
 messages:
   removedEntities: "&7Removed %s %s in your chunk."
+  reloadedConfig: "&cReloaded csl config."
