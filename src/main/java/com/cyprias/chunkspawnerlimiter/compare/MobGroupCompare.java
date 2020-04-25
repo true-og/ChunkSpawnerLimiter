@@ -3,7 +3,7 @@ package com.cyprias.chunkspawnerlimiter.compare;
 import org.bukkit.entity.*;
 
 public class MobGroupCompare implements EntityCompare {
-    private String mobGroup;
+    private final String mobGroup;
 
     public MobGroupCompare(String mobGroup) {
         this.mobGroup = mobGroup;
