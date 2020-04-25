@@ -33,6 +33,7 @@ public class Config {
 	public static class Messages {
 		private static String path = "messages.";
 		public static String REMOVED_ENTITIES = config.getString(path+"removedEntities");
+		public static String RELOADED_CONFIG = config.getString(path+"reloadedConfig", "&cReloaded csl config.");
 	}
 	public static boolean getBoolean(String property) {
 		return ChunkSpawnerLimiter.getInstance().getConfig().getBoolean(property);
