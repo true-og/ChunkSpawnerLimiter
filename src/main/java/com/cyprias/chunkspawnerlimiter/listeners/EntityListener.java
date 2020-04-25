@@ -1,6 +1,6 @@
 package com.cyprias.chunkspawnerlimiter.listeners;
 
-import com.cyprias.chunkspawnerlimiter.Common;
+import com.cyprias.chunkspawnerlimiter.ChatUtil;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -16,13 +16,13 @@ import com.cyprias.chunkspawnerlimiter.Config;
 public class EntityListener implements Listener {
     @EventHandler
     public void onCreatureSpawnEvent(CreatureSpawnEvent e) {
-        if (e.isCancelled() || !Config.getBoolean("properties.watch-creature-spawns") )
+        if (e.isCancelled() || !Config.Properties.WATCH_CREATURE_SPAWNS)
             return;
 
-        String reason = e.getSpawnReason().toString();
+       final String reason = e.getSpawnReason().toString();
 
         if (!Config.isSpawnReason(reason)){
-            Common.debug("Ignoring " + e.getEntity().getType().toString() + " due to spawn-reason: " + reason);
+            ChatUtil.debug("Ignoring " + e.getEntity().getType().toString() + " due to spawn-reason: " + reason);
             return;
         }
 

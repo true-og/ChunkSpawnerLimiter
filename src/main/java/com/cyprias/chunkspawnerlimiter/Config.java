@@ -1,8 +1,10 @@
 package com.cyprias.chunkspawnerlimiter;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Config {
 
@@ -46,7 +48,7 @@ public class Config {
 	}
 
 	public static String getString(String property, Object... args) {
-		return String.format(config.getString(property), args);
+		return String.format(Objects.requireNonNull(config.getString(property)), args);
 	}
 
 	
