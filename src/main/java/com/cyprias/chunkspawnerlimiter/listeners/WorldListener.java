@@ -62,7 +62,7 @@ public class WorldListener implements Listener {
      * @param chunk Chunk
      */
     public static void checkChunk(Chunk chunk) {
-        if (Config.getStringList("excluded-worlds").contains(chunk.getWorld().getName())) {
+        if (Config.EXCLUDED_WORLDS.contains(chunk.getWorld().getName())) {
             return;
         }
 
@@ -75,7 +75,7 @@ public class WorldListener implements Listener {
 
             if (entry.getValue().size() > limit) {
                 ChatUtil.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + chunk.getX() + " " + chunk.getZ());
-                if (Config.getBoolean("properties.notify-players")) {
+                if (Config.Properties.NOTIFY_PLAYERS) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
                 removeEntities(entry, limit);
