@@ -1,12 +1,9 @@
 package com.cyprias.chunkspawnerlimiter;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 
 public class Config {
 	private static FileConfiguration config = ChunkSpawnerLimiter.getInstance().getConfig();
