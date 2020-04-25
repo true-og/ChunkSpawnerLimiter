@@ -2,10 +2,11 @@ package com.cyprias.chunkspawnerlimiter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
 /**
- * @author sarhatabaot
+ * ChatUtil
  */
-public class Common {
+public class ChatUtil {
 	public static void tell(CommandSender toWhom, String message) {
 		toWhom.sendMessage(colorize(message));
 	}
