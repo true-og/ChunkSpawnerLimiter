@@ -12,3 +12,4 @@ commands:
   cslreload:
     description: "Reloads the config file."
     permission: "csl.reload"
+    permission-message: You do not have <permission>.
