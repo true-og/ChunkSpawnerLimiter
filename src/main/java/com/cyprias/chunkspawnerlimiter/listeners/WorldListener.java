@@ -2,12 +2,10 @@ package com.cyprias.chunkspawnerlimiter.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import com.cyprias.chunkspawnerlimiter.Common;
+import com.cyprias.chunkspawnerlimiter.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -32,7 +30,7 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onChunkLoadEvent(ChunkLoadEvent e) {
-        Common.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+        ChatUtil.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
         if (Config.Properties.ACTIVE_INSPECTIONS) {
             InspectTask inspectTask = new InspectTask(e.getChunk());
             long delay = Config.Properties.INSPECTION_FREQUENCY * 20L;
@@ -47,10 +45,10 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onChunkUnloadEvent(ChunkUnloadEvent e) {
-        Common.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+        ChatUtil.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
 
         if (chunkTasks.containsKey(e.getChunk())) {
-            Bukkit.getServer().getScheduler().cancelTask(chunkTasks.get(e.getChunk()));
+            plugin.getServer().getScheduler().cancelTask(chunkTasks.get(e.getChunk()));
             chunkTasks.remove(e.getChunk());
         }
 
@@ -76,7 +74,7 @@ public class WorldListener implements Listener {
             int limit = Config.getEntityLimit(entityType);
 
             if (entry.getValue().size() > limit) {
-                Common.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + chunk.getX() + " " + chunk.getZ());
+                ChatUtil.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + chunk.getX() + " " + chunk.getZ());
                 if (Config.getBoolean("properties.notify-players")) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
@@ -92,7 +90,7 @@ public class WorldListener implements Listener {
     }
 
     private static boolean hasMetaData(Entity entity) {
-        for (String metadata : Config.getStringList("properties.ignore-metadata")) {
+        for (String metadata : Config.Properties.IGNORE_METADATA) {
             if (entity.hasMetadata(metadata)) {
                 return true;
             }
@@ -102,9 +100,10 @@ public class WorldListener implements Listener {
 
     private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
-            if (hasMetaData(entry.getValue().get(i)) || hasCustomName(entry.getValue().get(i)) || (entry.getValue().get(i) instanceof Player))
+            final Entity entity = entry.getValue().get(i);
+            if (hasMetaData(entity) || hasCustomName(entity) || (entity instanceof Player))
                 continue;
-            entry.getValue().get(i).remove();
+            entity.remove();
         }
     }
 
@@ -136,7 +135,7 @@ public class WorldListener implements Listener {
         for (int i = entities.length - 1; i >= 0; i--) {
             if (entities[i] instanceof Player) {
                 final Player p = (Player) entities[i];
-                Common.tell(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
+                ChatUtil.tell(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
             }
         }
     }
