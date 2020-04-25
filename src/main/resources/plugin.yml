@@ -1,10 +1,10 @@
-name: ChunkSpawnerLimiter
-main: com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter
+name: ${project.name}
+main: ${bukkit.main.class}
 author: Cyprias
 authors: [sarhatabaot]
 api-version: "1.13"
 prefix: "CSL"
-description: Limit entities in a chunk.
+description: ${project.description}
 website: ${project.url}
 version: ${project.version}
 load: POSTWORLD
@@ -12,4 +12,4 @@ commands:
   cslreload:
     description: "Reloads the config file."
     permission: "csl.reload"
-    permission-message: You do not have <permission>.
+    permission-message: You do not have §c<permission>
