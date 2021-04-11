@@ -3,3 +3,4 @@
 [![Build Status](https://travis-ci.org/sarhatabaot/ChunkSpawnerLimiter.svg?branch=master)](https://travis-ci.org/sarhatabaot/ChunkSpawnerLimiter)
 
 Maintained fork of the [ChunkSpawnerLimiter](https://dev.bukkit.org/projects/chunkspawnerlimiter) plugin: A simple plugin to enforce spawner limits per chunk.
+  
