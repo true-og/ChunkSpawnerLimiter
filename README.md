@@ -1,6 +1,6 @@
 # ChunkSpawnerLimiter
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5df97cd1c2f44c119c118551d2a60566)](https://www.codacy.com/app/TreasureIslandMinecraft/ChunkSpawnerLimiter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sarhatabaot/ChunkSpawnerLimiter&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.org/sarhatabaot/ChunkSpawnerLimiter.svg?branch=master)](https://travis-ci.org/sarhatabaot/ChunkSpawnerLimiter)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sarhatabaot_ChunkSpawnerLimiter&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sarhatabaot_ChunkSpawnerLimiter)
+[![Java CI with Maven](https://github.com/sarhatabaot/ChunkSpawnerLimiter/actions/workflows/maven.yml/badge.svg)](https://github.com/sarhatabaot/ChunkSpawnerLimiter/actions/workflows/maven.yml)
 
 Maintained fork of the [ChunkSpawnerLimiter](https://dev.bukkit.org/projects/chunkspawnerlimiter) plugin: A simple plugin to enforce spawner limits per chunk.
   
