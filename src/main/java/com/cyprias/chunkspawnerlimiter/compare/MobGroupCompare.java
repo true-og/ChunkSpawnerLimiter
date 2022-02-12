@@ -1,6 +1,8 @@
 package com.cyprias.chunkspawnerlimiter.compare;
 
 import org.bukkit.entity.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public class MobGroupCompare implements EntityCompare {
     private final String mobGroup;
@@ -14,7 +16,8 @@ public class MobGroupCompare implements EntityCompare {
         return (getMobGroup(entity).equals(this.mobGroup));
     }
 
-    public static String getMobGroup(Entity entity) {
+    @Contract(pure = true)
+    public static @NotNull String getMobGroup(Entity entity) {
         // Determine the general group this mob belongs to.
         if (entity instanceof Animals) {
             // Chicken, Cow, MushroomCow, Ocelot, Pig, Sheep, Wolf
