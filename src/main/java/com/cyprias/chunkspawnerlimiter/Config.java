@@ -1,5 +1,6 @@
 package com.cyprias.chunkspawnerlimiter;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
@@ -27,6 +28,14 @@ public class Config {
 
 	public static boolean contains(String property) {
 		return fileConfiguration.contains(property);
+	}
+
+	public static ConfigurationSection getSpawnReasons() {
+		return fileConfiguration.getConfigurationSection("spawn-reasons");
+	}
+
+	public static ConfigurationSection getEntityLimits() {
+		return fileConfiguration.getConfigurationSection("entities");
 	}
 
 	public static class Properties {

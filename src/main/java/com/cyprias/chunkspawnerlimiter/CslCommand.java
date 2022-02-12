@@ -7,6 +7,9 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.Map;
 
 @CommandAlias("csl")
 public class CslCommand extends BaseCommand {
@@ -22,10 +25,10 @@ public class CslCommand extends BaseCommand {
     }
 
 
-    @Subcommand("info")
-    @CommandPermission("csl.info")
-    @Description("Shows config info.")
-    public void onInfo(final CommandSender sender) {
+    @Subcommand("settings")
+    @CommandPermission("csl.settings")
+    @Description("Shows config settings.")
+    public void onSettings(final CommandSender sender) {
         ChatUtil.tell(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
         ChatUtil.tell(sender,"&2&l-- Properties --");
         ChatUtil.tell(sender,"Debug Message: %s", Config.Properties.DEBUG_MESSAGES);
@@ -38,8 +41,26 @@ public class CslCommand extends BaseCommand {
         ChatUtil.tell(sender,"Notify Players: %s",Config.Properties.NOTIFY_PLAYERS);
         ChatUtil.tell(sender,"Preserve Named Entities: %s",Config.Properties.PRESERVE_NAMED_ENTITIES);
         ChatUtil.tell(sender,"Ignore Metadata: %s",Config.Properties.IGNORE_METADATA.toString());
+        ChatUtil.tell(sender,"Excluded Worlds: %s",Config.EXCLUDED_WORLDS);
         ChatUtil.tell(sender,"&2&l-- Messages --");
         ChatUtil.tell(sender,"Reloaded Config: %s",Config.Messages.RELOADED_CONFIG);
         ChatUtil.tell(sender,"Removed Entities: %s",Config.Messages.REMOVED_ENTITIES);
+    }
+
+    @Subcommand("info")
+    @CommandPermission("csl.info")
+    @Description("Shows config info.")
+    public void onInfo(final CommandSender sender) {
+        ChatUtil.tell(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
+        ChatUtil.tell(sender,"&2&l-- Reasons to cull on: --");
+        sendConfigurationSection(sender,Config.getSpawnReasons());
+        ChatUtil.tell(sender,"&2&l-- Entity Limits: --");
+        sendConfigurationSection(sender,Config.getEntityLimits());
+    }
+
+    private void sendConfigurationSection(final CommandSender sender,final ConfigurationSection section) {
+        for(Map.Entry<String,Object> entry: section.getValues(false).entrySet()) {
+            ChatUtil.tell(sender,"%s: %s",entry.getKey(),entry.getValue().toString());
+        }
     }
 }
