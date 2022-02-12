@@ -2,6 +2,7 @@ package com.cyprias.chunkspawnerlimiter.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.cyprias.chunkspawnerlimiter.ChatUtil;
@@ -24,7 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
 @RequiredArgsConstructor
 public class WorldListener implements Listener {
     private final ChunkSpawnerLimiter plugin;
-    private HashMap<Chunk, Integer> chunkTasks = new HashMap<>();
+    private final Map<Chunk, Integer> chunkTasks = new HashMap<>();
 
     @EventHandler
     public void onChunkLoadEvent(ChunkLoadEvent e) {
@@ -111,18 +112,16 @@ public class WorldListener implements Listener {
             EntityType type = entities[i].getType();
 
             String entityType = type.name();
-            String eGroup = MobGroupCompare.getMobGroup(entities[i]);
+            String entityMobGroup = MobGroupCompare.getMobGroup(entities[i]);
 
             if (Config.contains("entities." + entityType)) {
-                if (!modifiedTypes.containsKey(entityType))
-                    modifiedTypes.put(entityType, new ArrayList<>());
+                modifiedTypes.putIfAbsent(entityType,new ArrayList<>());
                 modifiedTypes.get(entityType).add(entities[i]);
             }
 
-            if (Config.contains("entities." + eGroup)) {
-                if (!modifiedTypes.containsKey(eGroup))
-                    modifiedTypes.put(eGroup, new ArrayList<>());
-                modifiedTypes.get(eGroup).add(entities[i]);
+            if (Config.contains("entities." + entityMobGroup)) {
+                modifiedTypes.putIfAbsent(entityMobGroup,new ArrayList<>());
+                modifiedTypes.get(entityMobGroup).add(entities[i]);
             }
         }
         return modifiedTypes;
@@ -133,7 +132,8 @@ public class WorldListener implements Listener {
         for (int i = entities.length - 1; i >= 0; i--) {
             if (entities[i] instanceof Player) {
                 final Player p = (Player) entities[i];
-                ChatUtil.tell(p, Config.getString("messages.removedEntities", entry.getValue().size() - limit, entityType));
+
+                ChatUtil.tell(p, Config.Messages.REMOVED_ENTITIES, entry.getValue().size() - limit, entityType);
             }
         }
     }

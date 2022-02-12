@@ -10,7 +10,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import com.cyprias.chunkspawnerlimiter.Config;
 
 /**
- *
  * Spawn Reasons at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
  */
 public class EntityListener implements Listener {
@@ -22,7 +21,7 @@ public class EntityListener implements Listener {
        final String reason = e.getSpawnReason().toString();
 
         if (!Config.isSpawnReason(reason)){
-            ChatUtil.debug("Ignoring " + e.getEntity().getType().toString() + " due to spawn-reason: " + reason);
+            ChatUtil.debug("Ignoring " + e.getEntity().getType() + " due to spawn-reason: " + reason);
             return;
         }
 
