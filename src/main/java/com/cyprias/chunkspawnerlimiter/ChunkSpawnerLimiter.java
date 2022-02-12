@@ -1,58 +1,52 @@
 package com.cyprias.chunkspawnerlimiter;
 
-import lombok.Getter;
-import lombok.Setter;
+import co.aikar.commands.PaperCommandManager;
+import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
+import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
-import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
+import org.jetbrains.annotations.NotNull;
 
 public class ChunkSpawnerLimiter extends JavaPlugin {
-	@Getter
-	@Setter
 	private static ChunkSpawnerLimiter instance;
+
+	public static void setInstance(final ChunkSpawnerLimiter plugin) {
+		ChunkSpawnerLimiter.instance = plugin;
+	}
 
 	@Override
 	public void onEnable() {
 		setInstance(this);
 		saveDefaultConfig();
 		registerListeners();
-		getCommand("cslreload").setExecutor(this);
-
+		PaperCommandManager paperCommandManager = new PaperCommandManager(this);
+		paperCommandManager.registerCommand(new CslCommand());
 		new Metrics(this, 4195);
 	}
 
-
 	@Override
 	public void onDisable() {
-		setInstance(null);
 		getServer().getScheduler().cancelTasks(this);
+		setInstance(null);
 	}
 
+	public static ChunkSpawnerLimiter getInstance() {
+		return instance;
+	}
 
 	private void registerListeners() {
-		PluginManager manager = getServer().getPluginManager();
-		manager.registerEvents(new EntityListener(), this);
-		manager.registerEvents(new WorldListener(this), this);
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(new EntityListener(), this);
+		pm.registerEvents(new WorldListener(this), this);
 		ChatUtil.debug("Registered listeners.");
-	}
-
-	@Override
-	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		reloadConfig();
-		Config.reload();
-		sender.sendMessage(ChatUtil.colorize(Config.Messages.RELOADED_CONFIG));
-		return true;
 	}
 
 	public static void cancelTask(int taskID) {
 		Bukkit.getServer().getScheduler().cancelTask(taskID);
 	}
-
 
 }
