@@ -2,16 +2,25 @@ package com.cyprias.chunkspawnerlimiter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ChatUtil
  */
 public class ChatUtil {
-	public static void tell(CommandSender toWhom, String message) {
+	private ChatUtil(){
+		throw new UnsupportedOperationException();
+	}
+	public static void tell(@NotNull CommandSender toWhom, String message) {
 		toWhom.sendMessage(colorize(message));
 	}
+	public static void tell(@NotNull CommandSender toWhom, String message, Object... args) {
+		toWhom.sendMessage(String.format(colorize(message),args));
+	}
 
-	public static String colorize(String message){
+	@Contract("_ -> new")
+	public static @NotNull String colorize(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
