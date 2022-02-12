@@ -5,7 +5,6 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -26,6 +25,7 @@ public class CslCommand extends BaseCommand {
 
 
     @Subcommand("settings")
+    @CommandAlias("cslsettings")
     @CommandPermission("csl.settings")
     @Description("Shows config settings.")
     public void onSettings(final CommandSender sender) {
@@ -48,6 +48,7 @@ public class CslCommand extends BaseCommand {
     }
 
     @Subcommand("info")
+    @CommandAlias("cslinfo")
     @CommandPermission("csl.info")
     @Description("Shows config info.")
     public void onInfo(final CommandSender sender) {
