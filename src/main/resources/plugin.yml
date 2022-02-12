@@ -8,8 +8,3 @@ description: ${project.description}
 website: ${project.url}
 version: ${project.version}
 load: POSTWORLD
-commands:
-  cslreload:
-    description: "Reloads the config file."
-    permission: "csl.reload"
-    permission-message: You do not have §c<permission>
