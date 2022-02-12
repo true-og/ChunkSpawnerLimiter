@@ -5,11 +5,8 @@ import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
 import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 public class ChunkSpawnerLimiter extends JavaPlugin {
 	private static ChunkSpawnerLimiter instance;
