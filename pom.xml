@@ -13,32 +13,93 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <bukkit.main.class>${project.groupId}.${project.artifactId}</bukkit.main.class>
         <java.version>1.8</java.version>
+
+        <maven.shade.version>3.3.0</maven.shade.version>
+        <maven.jar.version>3.2.0</maven.jar.version>
+        <maven.compiler.version>3.10.1</maven.compiler.version>
+        <messages.plugin.version>1.2.2</messages.plugin.version>
+
+        <spigot.api.version>1.13.2-R0.1-SNAPSHOT</spigot.api.version>
+        <bstats.version>3.0.0</bstats.version>
+        <acf.version>0.5.1-SNAPSHOT</acf.version>
+        <lombok.version>1.18.24</lombok.version>
+        <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
+        <formatter.version>2.16.0</formatter.version>
+
     </properties>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven.shade.version}</version>
+                    <configuration>
+                        <minimizeJar>true</minimizeJar>
+                        <relocations>
+                            <relocation>
+                                <pattern>org.bstats</pattern>
+                                <shadedPattern>${project.groupId}.metrics</shadedPattern>
+                            </relocation>
+                            <relocation>
+                                <pattern>co.aikar.commands</pattern>
+                                <shadedPattern>${project.groupId}.acf</shadedPattern>
+                            </relocation>
+                            <relocation>
+                                <pattern>co.aikar.locales</pattern>
+                                <shadedPattern>${project.groupId}.locales</shadedPattern>
+                            </relocation>
+                        </relocations>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.version}</version>
+                    <configuration>
+                        <finalName>${finalName}</finalName>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>net.revelc.code.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>${formatter.version}</version>
+                    <configuration>
+                        <includes>
+                            <include>com/cyprias/chunkspawnerlimiter/messages/</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.sarhatabaot</groupId>
+                    <artifactId>messages-maven-plugin</artifactId>
+                    <version>${messages.version}</version>
+                    <configuration>
+                        <fileType>JSON</fileType>
+                        <overwriteClasses>true</overwriteClasses>
+                        <sourceFolder>internal-messages</sourceFolder>
+                        <targetPackage>com.cyprias.chunkspawnerlimiter.messages</targetPackage>
+                        <privateConstructor>"This operation is not supported"</privateConstructor>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <configuration>
-                    <minimizeJar>true</minimizeJar>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>${project.groupId}.metrics</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>${project.groupId}.acf</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>${project.groupId}.locales</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
+                <version>${maven.shade.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -51,22 +112,24 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <finalName>${finalName}</finalName>
-                </configuration>
+                <version>${maven.jar.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
+                <version>${maven.compiler.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>${formatter.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>com.github.sarhatabaot</groupId>
+                <artifactId>messages-maven-plugin</artifactId>
+                <version>${messages.plugin.version}</version>
             </plugin>
         </plugins>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -74,6 +137,7 @@
             </resource>
         </resources>
     </build>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -92,32 +156,32 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>${spigot.api.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
+            <version>${bstats.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>co.aikar</groupId>
             <artifactId>acf-paper</artifactId>
-            <version>0.5.1-SNAPSHOT</version>
+            <version>${acf.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+            <version>${jetbrains.annotations.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
