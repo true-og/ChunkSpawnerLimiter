@@ -3,6 +3,7 @@ package com.cyprias.chunkspawnerlimiter;
 import co.aikar.commands.PaperCommandManager;
 import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
 import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
+import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -39,7 +40,7 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new EntityListener(), this);
 		pm.registerEvents(new WorldListener(this), this);
-		ChatUtil.debug("Registered listeners.");
+		ChatUtil.debug(Debug.REGISTER_LISTENERS);
 	}
 
 	public static void cancelTask(int taskID) {

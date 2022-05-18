@@ -2,6 +2,7 @@ package com.cyprias.chunkspawnerlimiter.tasks;
 
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.ChatUtil;
+import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Chunk;
@@ -17,7 +18,7 @@ public class InspectTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        ChatUtil.debug("Active check " + chunk.getX() + " " + chunk.getZ());
+        ChatUtil.debug(Debug.ACTIVE_CHECK,chunk.getX(),chunk.getZ());
         if (!chunk.isLoaded()) {
             ChunkSpawnerLimiter.cancelTask(id);
             return;

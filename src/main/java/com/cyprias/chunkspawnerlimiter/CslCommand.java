@@ -5,18 +5,20 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
+import com.cyprias.chunkspawnerlimiter.messages.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 @CommandAlias("csl")
 public class CslCommand extends BaseCommand {
 
-    @Subcommand("reload")
-    @CommandAlias("cslreload")
-    @CommandPermission("csl.reload")
-    @Description("Reloads the config file.")
+    @Subcommand(Command.Reload.COMMAND)
+    @CommandAlias(Command.Reload.ALIAS)
+    @CommandPermission(Command.Reload.PERMISSION)
+    @Description(Command.Reload.DESCRIPTION)
     public void onReload(final CommandSender sender){
         ChunkSpawnerLimiter.getInstance().reloadConfig();
         Config.reload();
@@ -24,10 +26,10 @@ public class CslCommand extends BaseCommand {
     }
 
 
-    @Subcommand("settings")
-    @CommandAlias("cslsettings")
-    @CommandPermission("csl.settings")
-    @Description("Shows config settings.")
+    @Subcommand(Command.Settings.COMMAND)
+    @CommandAlias(Command.Settings.ALIAS)
+    @CommandPermission(Command.Settings.PERMISSION)
+    @Description(Command.Settings.DESCRIPTION)
     public void onSettings(final CommandSender sender) {
         ChatUtil.tell(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
         ChatUtil.tell(sender,"&2&l-- Properties --");
@@ -47,10 +49,10 @@ public class CslCommand extends BaseCommand {
         ChatUtil.tell(sender,"Removed Entities: %s",Config.Messages.REMOVED_ENTITIES);
     }
 
-    @Subcommand("info")
-    @CommandAlias("cslinfo")
-    @CommandPermission("csl.info")
-    @Description("Shows config info.")
+    @Subcommand(Command.Info.COMMAND)
+    @CommandAlias(Command.Info.ALIAS)
+    @CommandPermission(Command.Info.PERMISSION)
+    @Description(Command.Info.DESCRIPTION)
     public void onInfo(final CommandSender sender) {
         ChatUtil.tell(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
         ChatUtil.tell(sender,"&2&l-- Reasons to cull on: --");
@@ -59,7 +61,7 @@ public class CslCommand extends BaseCommand {
         sendConfigurationSection(sender,Config.getEntityLimits());
     }
 
-    private void sendConfigurationSection(final CommandSender sender,final ConfigurationSection section) {
+    private void sendConfigurationSection(final CommandSender sender,final @NotNull ConfigurationSection section) {
         for(Map.Entry<String,Object> entry: section.getValues(false).entrySet()) {
             ChatUtil.tell(sender,"%s: %s",entry.getKey(),entry.getValue().toString());
         }

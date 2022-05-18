@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.cyprias.chunkspawnerlimiter.ChatUtil;
+import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Chunk;
@@ -21,6 +22,7 @@ import com.cyprias.chunkspawnerlimiter.Config;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public class WorldListener implements Listener {
@@ -28,31 +30,31 @@ public class WorldListener implements Listener {
     private final Map<Chunk, Integer> chunkTasks = new HashMap<>();
 
     @EventHandler
-    public void onChunkLoadEvent(ChunkLoadEvent e) {
-        ChatUtil.debug("ChunkLoadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+    public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
+        ChatUtil.debug(Debug.CHUNK_LOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
         if (Config.Properties.ACTIVE_INSPECTIONS) {
-            InspectTask inspectTask = new InspectTask(e.getChunk());
+            InspectTask inspectTask = new InspectTask(event.getChunk());
             long delay = Config.Properties.INSPECTION_FREQUENCY * 20L;
             BukkitTask task = inspectTask.runTaskTimer(plugin, delay, delay);
             inspectTask.setId(task.getTaskId());
-            chunkTasks.put(e.getChunk(), task.getTaskId());
+            chunkTasks.put(event.getChunk(), task.getTaskId());
         }
 
         if (Config.Properties.CHECK_CHUNK_LOAD)
-            checkChunk(e.getChunk());
+            checkChunk(event.getChunk());
     }
 
     @EventHandler
-    public void onChunkUnloadEvent(ChunkUnloadEvent e) {
-        ChatUtil.debug("ChunkUnloadEvent " + e.getChunk().getX() + " " + e.getChunk().getZ());
+    public void onChunkUnloadEvent(@NotNull ChunkUnloadEvent event) {
+        ChatUtil.debug(Debug.CHUNK_UNLOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
 
-        if (chunkTasks.containsKey(e.getChunk())) {
-            plugin.getServer().getScheduler().cancelTask(chunkTasks.get(e.getChunk()));
-            chunkTasks.remove(e.getChunk());
+        if (chunkTasks.containsKey(event.getChunk())) {
+            plugin.getServer().getScheduler().cancelTask(chunkTasks.get(event.getChunk()));
+            chunkTasks.remove(event.getChunk());
         }
 
         if (Config.Properties.CHECK_CHUNK_UNLOAD)
-            checkChunk(e.getChunk());
+            checkChunk(event.getChunk());
     }
 
     /**
@@ -60,7 +62,7 @@ public class WorldListener implements Listener {
      *
      * @param chunk Chunk
      */
-    public static void checkChunk(Chunk chunk) {
+    public static void checkChunk(@NotNull Chunk chunk) {
         if (Config.EXCLUDED_WORLDS.contains(chunk.getWorld().getName())) {
             return;
         }
@@ -73,7 +75,7 @@ public class WorldListener implements Listener {
             int limit = Config.getEntityLimit(entityType);
 
             if (entry.getValue().size() > limit) {
-                ChatUtil.debug("Removing " + (entry.getValue().size() - limit) + " " + entityType + " @ " + chunk.getX() + " " + chunk.getZ());
+                ChatUtil.debug(Debug.REMOVING_ENTITY_AT,entry.getValue().size() - limit,entityType,chunk.getX(),chunk.getZ());
                 if (Config.Properties.NOTIFY_PLAYERS) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
@@ -97,7 +99,7 @@ public class WorldListener implements Listener {
         return false;
     }
 
-    private static void removeEntities(Entry<String, ArrayList<Entity>> entry, int limit) {
+    private static void removeEntities(@NotNull Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
             final Entity entity = entry.getValue().get(i);
             if (hasMetaData(entity) || hasCustomName(entity) || (entity instanceof Player))
@@ -106,7 +108,7 @@ public class WorldListener implements Listener {
         }
     }
 
-    private static HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity[] entities) {
+    private static @NotNull HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity @NotNull [] entities) {
         HashMap<String, ArrayList<Entity>> modifiedTypes = new HashMap<>();
         for (int i = entities.length - 1; i >= 0; i--) {
             EntityType type = entities[i].getType();
@@ -128,7 +130,7 @@ public class WorldListener implements Listener {
     }
 
 
-    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity[] entities, int limit, String entityType) {
+    private static void notifyPlayers(Entry<String, ArrayList<Entity>> entry, Entity @NotNull [] entities, int limit, String entityType) {
         for (int i = entities.length - 1; i >= 0; i--) {
             if (entities[i] instanceof Player) {
                 final Player p = (Player) entities[i];
