@@ -14,7 +14,10 @@ properties:
   
   # Check a chunk when a mob spawns (CreatureSpawnEvent).
   watch-creature-spawns: true
-  
+
+  # Check a chunk when a vehicle spawns (VehicleCreateEvent).
+  watch-vehicle-create-event: true
+
   # Radius of surrounding chunks to check.
   check-surrounding-chunks: 1
 

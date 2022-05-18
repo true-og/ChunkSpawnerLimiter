@@ -45,6 +45,7 @@ public class Config {
 		public static boolean CHECK_CHUNK_UNLOAD = fileConfiguration.getBoolean(path + "check-chunk-unload");
 		public static boolean ACTIVE_INSPECTIONS = fileConfiguration.getBoolean(path + "active-inspections");
 		public static boolean WATCH_CREATURE_SPAWNS = fileConfiguration.getBoolean(path + "watch-creature-spawns");
+		public static boolean WATCH_VEHICLE_CREATE = fileConfiguration.getBoolean(path + "watch-vehicle-spawns");
 		public static int CHECK_SURROUNDING_CHUNKS = fileConfiguration.getInt(path + "check-surrounding-chunks");
 		public static int INSPECTION_FREQUENCY = fileConfiguration.getInt(path + "inspection-frequency");
 		public static boolean NOTIFY_PLAYERS = fileConfiguration.getBoolean(path + "notify-players");
