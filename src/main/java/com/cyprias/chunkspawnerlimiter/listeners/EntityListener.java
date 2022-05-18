@@ -29,15 +29,15 @@ public class EntityListener implements Listener {
 
         Chunk chunk = event.getLocation().getChunk();
         WorldListener.checkChunk(chunk);
-        checkSurroundings(chunk,event.getLocation().getWorld());
+        checkSurroundings(chunk);
     }
 
-    private void checkSurroundings(Chunk chunk,World world){
+    private void checkSurroundings(Chunk chunk){
         int surrounding = Config.Properties.CHECK_SURROUNDING_CHUNKS;
         if (surrounding > 0) {
             for (int x = chunk.getX() + surrounding; x >= (chunk.getX() - surrounding); x--) {
                 for (int z = chunk.getZ() + surrounding; z >= (chunk.getZ() - surrounding); z--) {
-                    WorldListener.checkChunk(world.getChunkAt(x, z));
+                    WorldListener.checkChunk(chunk.getWorld().getChunkAt(x, z));
                 }
             }
         }
