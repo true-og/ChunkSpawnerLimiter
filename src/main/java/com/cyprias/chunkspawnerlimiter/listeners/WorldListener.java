@@ -135,7 +135,7 @@ public class WorldListener implements Listener {
             if (entities[i] instanceof Player) {
                 final Player p = (Player) entities[i];
 
-                ChatUtil.tell(p, CslConfig.Messages.REMOVED_ENTITIES, entry.getValue().size() - limit, entityType);
+                ChatUtil.message(p, CslConfig.Messages.REMOVED_ENTITIES, entry.getValue().size() - limit, entityType);
             }
         }
     }
