@@ -32,7 +32,7 @@ public class PlaceBlockListener implements Listener {
         if (plugin.getBlocksConfig().hasLimit(placedType)) {
             final Integer limit = plugin.getBlocksConfig().getLimit(placedType);
             int amountInChunk = countBlocksInChunk(event.getBlock().getChunk().getChunkSnapshot(), placedType);
-            if (amountInChunk >= limit) {
+            if (amountInChunk > limit) {
                 event.setCancelled(true);
 
                 if (plugin.getBlocksConfig().isNotifyMessage()) {
