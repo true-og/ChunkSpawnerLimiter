@@ -1,5 +1,6 @@
 package com.cyprias.chunkspawnerlimiter;
 
+import com.cyprias.chunkspawnerlimiter.config.CslConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Contract;
@@ -27,7 +28,7 @@ public class ChatUtil {
     }
 
     public static void debug(String message) {
-        if (Config.Properties.DEBUG_MESSAGES) {
+        if (CslConfig.Properties.DEBUG_MESSAGES) {
             ChunkSpawnerLimiter.getInstance().getLogger().info(() -> "DEBUG " + message);
         }
     }

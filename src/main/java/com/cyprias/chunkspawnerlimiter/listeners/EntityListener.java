@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import com.cyprias.chunkspawnerlimiter.Config;
+import com.cyprias.chunkspawnerlimiter.config.CslConfig;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,12 +17,12 @@ import org.jetbrains.annotations.NotNull;
 public class EntityListener implements Listener {
     @EventHandler
     public void onCreatureSpawnEvent(@NotNull CreatureSpawnEvent event) {
-        if (event.isCancelled() || !Config.Properties.WATCH_CREATURE_SPAWNS)
+        if (event.isCancelled() || !CslConfig.Properties.WATCH_CREATURE_SPAWNS)
             return;
 
         final String reason = event.getSpawnReason().toString();
 
-        if (!Config.isSpawnReason(reason)) {
+        if (!CslConfig.isSpawnReason(reason)) {
             ChatUtil.debug(Debug.IGNORE_ENTITY, event.getEntity().getType(), reason);
             return;
         }
@@ -35,7 +35,7 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onVehicleCreateEvent(@NotNull VehicleCreateEvent event) {
-        if (event.isCancelled() || !Config.Properties.WATCH_VEHICLE_CREATE)
+        if (event.isCancelled() || !CslConfig.Properties.WATCH_VEHICLE_CREATE)
             return;
 
         Chunk chunk = event.getVehicle().getLocation().getChunk();
@@ -45,7 +45,7 @@ public class EntityListener implements Listener {
 
 
     private void checkSurroundings(Chunk chunk) {
-        int surrounding = Config.Properties.CHECK_SURROUNDING_CHUNKS;
+        int surrounding = CslConfig.Properties.CHECK_SURROUNDING_CHUNKS;
         if (surrounding > 0) {
             for (int x = chunk.getX() + surrounding; x >= (chunk.getX() - surrounding); x--) {
                 for (int z = chunk.getZ() + surrounding; z >= (chunk.getZ() - surrounding); z--) {

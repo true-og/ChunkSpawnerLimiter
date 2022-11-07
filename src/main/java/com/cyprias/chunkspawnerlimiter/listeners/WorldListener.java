@@ -18,7 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.cyprias.chunkspawnerlimiter.Config;
+import com.cyprias.chunkspawnerlimiter.config.CslConfig;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
 import org.bukkit.scheduler.BukkitTask;
@@ -32,15 +32,15 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
         ChatUtil.debug(Debug.CHUNK_LOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
-        if (Config.Properties.ACTIVE_INSPECTIONS) {
+        if (CslConfig.Properties.ACTIVE_INSPECTIONS) {
             InspectTask inspectTask = new InspectTask(event.getChunk());
-            long delay = Config.Properties.INSPECTION_FREQUENCY * 20L;
+            long delay = CslConfig.Properties.INSPECTION_FREQUENCY * 20L;
             BukkitTask task = inspectTask.runTaskTimer(plugin, delay, delay);
             inspectTask.setId(task.getTaskId());
             chunkTasks.put(event.getChunk(), task.getTaskId());
         }
 
-        if (Config.Properties.CHECK_CHUNK_LOAD)
+        if (CslConfig.Properties.CHECK_CHUNK_LOAD)
             checkChunk(event.getChunk());
     }
 
@@ -53,7 +53,7 @@ public class WorldListener implements Listener {
             chunkTasks.remove(event.getChunk());
         }
 
-        if (Config.Properties.CHECK_CHUNK_UNLOAD)
+        if (CslConfig.Properties.CHECK_CHUNK_UNLOAD)
             checkChunk(event.getChunk());
     }
 
@@ -63,7 +63,7 @@ public class WorldListener implements Listener {
      * @param chunk Chunk
      */
     public static void checkChunk(@NotNull Chunk chunk) {
-        if (Config.EXCLUDED_WORLDS.contains(chunk.getWorld().getName())) {
+        if (CslConfig.EXCLUDED_WORLDS.contains(chunk.getWorld().getName())) {
             return;
         }
 
@@ -72,11 +72,11 @@ public class WorldListener implements Listener {
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
             String entityType = entry.getKey();
-            int limit = Config.getEntityLimit(entityType);
+            int limit = CslConfig.getEntityLimit(entityType);
 
             if (entry.getValue().size() > limit) {
                 ChatUtil.debug(Debug.REMOVING_ENTITY_AT,entry.getValue().size() - limit,entityType,chunk.getX(),chunk.getZ());
-                if (Config.Properties.NOTIFY_PLAYERS) {
+                if (CslConfig.Properties.NOTIFY_PLAYERS) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
                 removeEntities(entry, limit);
@@ -85,13 +85,13 @@ public class WorldListener implements Listener {
     }
 
     private static boolean hasCustomName(Entity entity) {
-        if (Config.Properties.PRESERVE_NAMED_ENTITIES)
+        if (CslConfig.Properties.PRESERVE_NAMED_ENTITIES)
             return entity.getCustomName()!=null;
         return false;
     }
 
     private static boolean hasMetaData(Entity entity) {
-        for (String metadata : Config.Properties.IGNORE_METADATA) {
+        for (String metadata : CslConfig.Properties.IGNORE_METADATA) {
             if (entity.hasMetadata(metadata)) {
                 return true;
             }
@@ -116,12 +116,12 @@ public class WorldListener implements Listener {
             String entityType = type.name();
             String entityMobGroup = MobGroupCompare.getMobGroup(entities[i]);
 
-            if (Config.contains("entities." + entityType)) {
+            if (CslConfig.contains("entities." + entityType)) {
                 modifiedTypes.putIfAbsent(entityType,new ArrayList<>());
                 modifiedTypes.get(entityType).add(entities[i]);
             }
 
-            if (Config.contains("entities." + entityMobGroup)) {
+            if (CslConfig.contains("entities." + entityMobGroup)) {
                 modifiedTypes.putIfAbsent(entityMobGroup,new ArrayList<>());
                 modifiedTypes.get(entityMobGroup).add(entities[i]);
             }
@@ -135,7 +135,7 @@ public class WorldListener implements Listener {
             if (entities[i] instanceof Player) {
                 final Player p = (Player) entities[i];
 
-                ChatUtil.tell(p, Config.Messages.REMOVED_ENTITIES, entry.getValue().size() - limit, entityType);
+                ChatUtil.tell(p, CslConfig.Messages.REMOVED_ENTITIES, entry.getValue().size() - limit, entityType);
             }
         }
     }
