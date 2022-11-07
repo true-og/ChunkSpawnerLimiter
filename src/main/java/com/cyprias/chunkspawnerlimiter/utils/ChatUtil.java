@@ -36,7 +36,7 @@ public class ChatUtil {
                 20);
     }
 
-    private static String replace(String message, String material, int amount) {
+    private static @NotNull String replace(@NotNull String message, String material, int amount) {
         return message.replace("{material}", material)
                 .replace("{amount}", String.valueOf(amount));
     }
@@ -47,7 +47,7 @@ public class ChatUtil {
     }
 
     public static void debug(String message) {
-        if (config.getProperties().isDebugMessages()) {
+        if (config.isDebugMessages()) {
             plugin.getLogger().info(() -> "DEBUG " + message);
         }
     }

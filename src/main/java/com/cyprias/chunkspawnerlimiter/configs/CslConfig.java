@@ -7,8 +7,26 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
-	private Messages messages;
-	private Properties properties;
+	/* Properties */
+	private boolean debugMessages;
+	private boolean checkChunkLoad;
+	private boolean checkChunkUnload;
+	private boolean activeInspections;
+	private boolean watchCreatureSpawns;
+	private boolean watchVehicleCreate;
+	private int checkSurroundingChunks;
+	private int inspectionFrequency;
+	private boolean notifyPlayers;
+	private boolean preserveNamedEntities;
+	private List<String> ignoreMetadata;
+	/* Messages */
+	private String removedEntities;
+	private String reloadedConfig;
+
+	private String maxAmountBlocks;
+	private String maxAmountBlocksTitle;
+	private String maxAmountBlocksSubtitle;
+
 	private List<String> excludedWorlds;
 
 
@@ -19,8 +37,24 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	@Override
 	public void initValues() {
 		this.excludedWorlds = config.getStringList("excluded-worlds");
-		this.messages = new Messages();
-		this.properties = new Properties();
+		String propertiesPath = "properties.";
+		this.debugMessages =config.getBoolean(propertiesPath + "debug-messages");
+		this.checkChunkLoad = config.getBoolean(propertiesPath + "check-chunk-load");
+		this.checkChunkUnload = config.getBoolean(propertiesPath + "check-chunk-unload");
+		this.activeInspections = config.getBoolean(propertiesPath + "active-inspections");
+		this.watchCreatureSpawns =config.getBoolean(propertiesPath + "watch-creature-spawns");
+		this.watchVehicleCreate =config.getBoolean(propertiesPath + "watch-vehicle-spawns");
+		this.checkSurroundingChunks =config.getInt(propertiesPath + "check-surrounding-chunks");
+		this.inspectionFrequency = config.getInt(propertiesPath + "inspection-frequency", 300);
+		this.notifyPlayers = config.getBoolean(propertiesPath + "notify-players", false);
+		this.preserveNamedEntities = config.getBoolean(propertiesPath + "preserve-named-entities", true);
+		this.ignoreMetadata = config.getStringList(propertiesPath + "ignore-metadata");
+		String messagesPath = "messages.";
+		this.removedEntities = config.getString(messagesPath + "removedEntities");
+		this.reloadedConfig = config.getString(messagesPath + "reloadedConfig", "&cReloaded csl config.");
+		this.maxAmountBlocks = config.getString(messagesPath + "maxAmountBlocks", "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}.");
+		this.maxAmountBlocksTitle =config.getString(messagesPath + "maxAmountBlocksTitle", "&6Cannot place more &4{material}&6.");
+		this.maxAmountBlocksSubtitle = config.getString(messagesPath + "maxAmountBlocksSubtitle", "&6Max amount per chunk &2{amount}.");
 	}
 
 	public int getEntityLimit(String entityType) {
@@ -43,103 +77,71 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 		return config.getConfigurationSection("entities");
 	}
 
-	public class Properties {
-		private final String path = "properties.";
-		private boolean debugMessages = config.getBoolean(path + "debug-messages");
-		private boolean checkChunkLoad = config.getBoolean(path + "check-chunk-load");
-		private boolean checkChunkUnload = config.getBoolean(path + "check-chunk-unload");
-		private boolean activeInspections = config.getBoolean(path + "active-inspections");
-		private boolean watchCreatureSpawns = config.getBoolean(path + "watch-creature-spawns");
-		private boolean watchVehicleCreate = config.getBoolean(path + "watch-vehicle-spawns");
-		private int checkSurroundingChunks = config.getInt(path + "check-surrounding-chunks");
-		private int inspectionFrequency = config.getInt(path + "inspection-frequency", 300);
-		private boolean notifyPlayers = config.getBoolean(path + "notify-players", false);
-		private boolean preserveNamedEntities = config.getBoolean(path + "preserve-named-entities", true);
-		private List<String> ignoreMetadata = config.getStringList(path + "ignore-metadata");
-
-		public boolean isDebugMessages() {
-			return debugMessages;
-		}
-
-		public boolean isCheckChunkLoad() {
-			return checkChunkLoad;
-		}
-
-		public boolean isCheckChunkUnload() {
-			return checkChunkUnload;
-		}
-
-		public  boolean isActiveInspections() {
-			return activeInspections;
-		}
-
-		public  boolean isWatchCreatureSpawns() {
-			return watchCreatureSpawns;
-		}
-
-		public  boolean isWatchVehicleCreate() {
-			return watchVehicleCreate;
-		}
-
-		public  int getCheckSurroundingChunks() {
-			return checkSurroundingChunks;
-		}
-
-		public  int getInspectionFrequency() {
-			return inspectionFrequency;
-		}
-
-		public  boolean isNotifyPlayers() {
-			return notifyPlayers;
-		}
-
-		public  boolean isPreserveNamedEntities() {
-			return preserveNamedEntities;
-		}
-
-		public  List<String> getIgnoreMetadata() {
-			return ignoreMetadata;
-		}
-	}
-
-	public class Messages {
-		private final String path = "messages.";
-		private String removedEntities = config.getString(path + "removedEntities");
-		private String reloadedConfig = config.getString(path + "reloadedConfig", "&cReloaded csl config.");
-
-		private String maxAmountBlocks = config.getString(path + "maxAmountBlocks", "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}.");
-		private String maxAmountBlocksTitle = config.getString(path + "maxAmountBlocksTitle","&6Cannot place more &4{material}&6.");
-		private String maxAmountBlocksSubtitle = config.getString(path + "maxAmountBlocksSubtitle","&6Max amount per chunk &2{amount}.");
-		public String getRemovedEntities() {
-			return removedEntities;
-		}
-
-		public  String getReloadedConfig() {
-			return reloadedConfig;
-		}
-
-		public  String getMaxAmountBlocks() {
-			return maxAmountBlocks;
-		}
-
-		public  String getMaxAmountBlocksTitle() {
-			return maxAmountBlocksTitle;
-		}
-
-		public  String getMaxAmountBlocksSubtitle() {
-			return maxAmountBlocksSubtitle;
-		}
-	}
-
 	public List<String> getExcludedWorlds() {
 		return excludedWorlds;
 	}
 
-	public Messages getMessages() {
-		return messages;
+	public boolean isDebugMessages() {
+		return debugMessages;
 	}
 
-	public Properties getProperties() {
-		return properties;
+	public boolean isCheckChunkLoad() {
+		return checkChunkLoad;
+	}
+
+	public boolean isCheckChunkUnload() {
+		return checkChunkUnload;
+	}
+
+	public boolean isActiveInspections() {
+		return activeInspections;
+	}
+
+	public boolean isWatchCreatureSpawns() {
+		return watchCreatureSpawns;
+	}
+
+	public boolean isWatchVehicleCreate() {
+		return watchVehicleCreate;
+	}
+
+	public int getCheckSurroundingChunks() {
+		return checkSurroundingChunks;
+	}
+
+	public int getInspectionFrequency() {
+		return inspectionFrequency;
+	}
+
+	public boolean isNotifyPlayers() {
+		return notifyPlayers;
+	}
+
+	public boolean isPreserveNamedEntities() {
+		return preserveNamedEntities;
+	}
+
+	public List<String> getIgnoreMetadata() {
+		return ignoreMetadata;
+	}
+
+	public String getRemovedEntities() {
+		return removedEntities;
+	}
+
+	public String getReloadedConfig() {
+		return reloadedConfig;
+	}
+
+	public String getMaxAmountBlocks() {
+		return maxAmountBlocks;
+	}
+
+	public String getMaxAmountBlocksTitle() {
+		return maxAmountBlocksTitle;
+	}
+
+	public String getMaxAmountBlocksSubtitle() {
+		return maxAmountBlocksSubtitle;
 	}
 }

@@ -24,7 +24,7 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onCreatureSpawnEvent(@NotNull CreatureSpawnEvent event) {
-        if (event.isCancelled() || !config.getProperties().isWatchCreatureSpawns())
+        if (event.isCancelled() || !config.isWatchCreatureSpawns())
             return;
 
         final String reason = event.getSpawnReason().toString();
@@ -42,7 +42,7 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onVehicleCreateEvent(@NotNull VehicleCreateEvent event) {
-        if (event.isCancelled() || !config.getProperties().isWatchVehicleCreate())
+        if (event.isCancelled() || !config.isWatchVehicleCreate())
             return;
 
         Chunk chunk = event.getVehicle().getLocation().getChunk();
@@ -52,7 +52,7 @@ public class EntityListener implements Listener {
 
 
     private void checkSurroundings(Chunk chunk) {
-        int surrounding = config.getProperties().getCheckSurroundingChunks();
+        int surrounding = config.getCheckSurroundingChunks();
         if (surrounding > 0) {
             for (int x = chunk.getX() + surrounding; x >= (chunk.getX() - surrounding); x--) {
                 for (int z = chunk.getZ() + surrounding; z >= (chunk.getZ() - surrounding); z--) {

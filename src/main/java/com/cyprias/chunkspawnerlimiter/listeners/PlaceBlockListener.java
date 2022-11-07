@@ -36,14 +36,14 @@ public class PlaceBlockListener implements Listener {
                 event.setCancelled(true);
 
                 if (plugin.getBlocksConfig().isNotifyMessage()) {
-                    ChatUtil.message(event.getPlayer(), plugin.getCslConfig().getMessages().getMaxAmountBlocks()
+                    ChatUtil.message(event.getPlayer(), plugin.getCslConfig().getMaxAmountBlocks()
                             .replace("{material}", placedType.name())
                             .replace("{amount}", String.valueOf(limit)));
                 }
                 if (plugin.getBlocksConfig().isNotifyTitle()) {
                     ChatUtil.title(event.getPlayer(),
-                            plugin.getCslConfig().getMessages().getMaxAmountBlocksTitle(),
-                            plugin.getCslConfig().getMessages().getMaxAmountBlocksSubtitle(),
+                            plugin.getCslConfig().getMaxAmountBlocksTitle(),
+                            plugin.getCslConfig().getMaxAmountBlocksSubtitle(),
                             placedType.name(),
                             limit);
                 }

@@ -36,15 +36,15 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
         ChatUtil.debug(Debug.CHUNK_LOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
-        if (plugin.getCslConfig().getProperties().isActiveInspections()) {
+        if (plugin.getCslConfig().isActiveInspections()) {
             InspectTask inspectTask = new InspectTask(event.getChunk());
-            long delay = plugin.getCslConfig().getProperties().getInspectionFrequency() * 20L;
+            long delay = plugin.getCslConfig().getInspectionFrequency() * 20L;
             BukkitTask task = inspectTask.runTaskTimer(plugin, delay, delay);
             inspectTask.setId(task.getTaskId());
             chunkTasks.put(event.getChunk(), task.getTaskId());
         }
 
-        if (plugin.getCslConfig().getProperties().isCheckChunkLoad())
+        if (plugin.getCslConfig().isCheckChunkLoad())
             checkChunk(event.getChunk());
     }
 
@@ -57,7 +57,7 @@ public class WorldListener implements Listener {
             chunkTasks.remove(event.getChunk());
         }
 
-        if (plugin.getCslConfig().getProperties().isCheckChunkUnload())
+        if (plugin.getCslConfig().isCheckChunkUnload())
             checkChunk(event.getChunk());
     }
 
@@ -80,7 +80,7 @@ public class WorldListener implements Listener {
 
             if (entry.getValue().size() > limit) {
                 ChatUtil.debug(Debug.REMOVING_ENTITY_AT,entry.getValue().size() - limit,entityType,chunk.getX(),chunk.getZ());
-                if (config.getProperties().isNotifyPlayers()) {
+                if (config.isNotifyPlayers()) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
                 removeEntities(entry, limit);
@@ -89,13 +89,13 @@ public class WorldListener implements Listener {
     }
 
     private static boolean hasCustomName(Entity entity) {
-        if (config.getProperties().isPreserveNamedEntities())
+        if (config.isPreserveNamedEntities())
             return entity.getCustomName()!=null;
         return false;
     }
 
     private static boolean hasMetaData(Entity entity) {
-        for (String metadata : config.getProperties().getIgnoreMetadata()) {
+        for (String metadata : config.getIgnoreMetadata()) {
             if (entity.hasMetadata(metadata)) {
                 return true;
             }
@@ -139,7 +139,7 @@ public class WorldListener implements Listener {
             if (entities[i] instanceof Player) {
                 final Player p = (Player) entities[i];
 
-                ChatUtil.message(p, config.getMessages().getRemovedEntities(), entry.getValue().size() - limit, entityType);
+                ChatUtil.message(p, config.getRemovedEntities(), entry.getValue().size() - limit, entityType);
             }
         }
     }

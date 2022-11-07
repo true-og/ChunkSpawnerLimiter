@@ -29,7 +29,7 @@ public class CslCommand extends BaseCommand {
     @Description(Command.Reload.DESCRIPTION)
     public void onReload(final CommandSender sender){
         plugin.reloadConfigs();
-        ChatUtil.message(sender, plugin.getCslConfig().getMessages().getReloadedConfig());
+        ChatUtil.message(sender, plugin.getCslConfig().getReloadedConfig());
     }
 
 
@@ -40,20 +40,20 @@ public class CslCommand extends BaseCommand {
     public void onSettings(final CommandSender sender) {
         ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --",plugin.getDescription().getVersion());
         ChatUtil.message(sender,"&2&l-- Properties --");
-        ChatUtil.message(sender,"Debug Message: %s", plugin.getCslConfig().getProperties().isDebugMessages());
-        ChatUtil.message(sender,"Check Chunk Load: %s", plugin.getCslConfig().getProperties().isCheckChunkLoad());
-        ChatUtil.message(sender,"Check Chunk Unload: %s", plugin.getCslConfig().getProperties().isCheckChunkUnload());
-        ChatUtil.message(sender,"Active Inspection: %s", plugin.getCslConfig().getProperties().isActiveInspections());
-        ChatUtil.message(sender,"Watch Creature Spawns: %s", plugin.getCslConfig().getProperties().isWatchCreatureSpawns());
-        ChatUtil.message(sender,"Check Surrounding Chunks: %s", plugin.getCslConfig().getProperties().getCheckSurroundingChunks());
-        ChatUtil.message(sender,"Inspection Frequency: %d", plugin.getCslConfig().getProperties().getInspectionFrequency());
-        ChatUtil.message(sender,"Notify Players: %s",plugin.getCslConfig().getProperties().isNotifyPlayers());
-        ChatUtil.message(sender,"Preserve Named Entities: %s", plugin.getCslConfig().getProperties().isPreserveNamedEntities());
-        ChatUtil.message(sender,"Ignore Metadata: %s", plugin.getCslConfig().getProperties().getIgnoreMetadata().toString());
+        ChatUtil.message(sender,"Debug Message: %s", plugin.getCslConfig().isDebugMessages());
+        ChatUtil.message(sender,"Check Chunk Load: %s", plugin.getCslConfig().isCheckChunkLoad());
+        ChatUtil.message(sender,"Check Chunk Unload: %s", plugin.getCslConfig().isCheckChunkUnload());
+        ChatUtil.message(sender,"Active Inspection: %s", plugin.getCslConfig().isActiveInspections());
+        ChatUtil.message(sender,"Watch Creature Spawns: %s", plugin.getCslConfig().isWatchCreatureSpawns());
+        ChatUtil.message(sender,"Check Surrounding Chunks: %s", plugin.getCslConfig().getCheckSurroundingChunks());
+        ChatUtil.message(sender,"Inspection Frequency: %d", plugin.getCslConfig().getInspectionFrequency());
+        ChatUtil.message(sender,"Notify Players: %s",plugin.getCslConfig().isNotifyPlayers());
+        ChatUtil.message(sender,"Preserve Named Entities: %s", plugin.getCslConfig().isPreserveNamedEntities());
+        ChatUtil.message(sender,"Ignore Metadata: %s", plugin.getCslConfig().getIgnoreMetadata().toString());
         ChatUtil.message(sender,"Excluded Worlds: %s", plugin.getCslConfig().getExcludedWorlds());
         ChatUtil.message(sender,"&2&l-- Messages --");
-        ChatUtil.message(sender,"Reloaded Config: %s", plugin.getCslConfig().getMessages().getReloadedConfig());
-        ChatUtil.message(sender,"Removed Entities: %s", plugin.getCslConfig().getMessages().getRemovedEntities());
+        ChatUtil.message(sender,"Reloaded Config: %s", plugin.getCslConfig().getReloadedConfig());
+        ChatUtil.message(sender,"Removed Entities: %s", plugin.getCslConfig().getRemovedEntities());
     }
 
     @Subcommand(Command.Info.COMMAND)
