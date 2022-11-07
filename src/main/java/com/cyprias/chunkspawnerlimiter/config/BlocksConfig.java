@@ -12,11 +12,16 @@ import java.util.Map;
  */
 public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
     private final Map<Material, Integer> materialLimits;
+    private boolean notifyMessage;
+    private boolean notifyTitle;
 
     public BlocksConfig(final @NotNull ChunkSpawnerLimiter plugin) {
         super(plugin, "", "blocks.yml", "");
 
         this.materialLimits = convertToMaterialLimits(config.getConfigurationSection("blocks").getValues(false));
+
+        this.notifyMessage = config.getBoolean("notify.message", false);
+        this.notifyTitle = config.getBoolean("notify.title", true);
     }
 
     public Map<Material, Integer> getMaterialLimits() {
@@ -30,6 +35,7 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
     public boolean hasLimit(final Material material) {
         return materialLimits.containsKey(material);
     }
+
 
     private @NotNull Map<Material, Integer> convertToMaterialLimits(@NotNull Map<String, Object> map) {
         final Map<Material, Integer> materialIntegerEnumMap = new EnumMap<>(Material.class);
