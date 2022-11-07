@@ -32,6 +32,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 
 	public CslConfig(final @NotNull ChunkSpawnerLimiter plugin) {
 		super(plugin, "", "config.yml", "");
+		saveDefaultConfig();
 	}
 
 	@Override

@@ -22,6 +22,7 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		initConfigs();
+		ChatUtil.init(this);
 
 		registerListeners();
 		PaperCommandManager paperCommandManager = new PaperCommandManager(this);

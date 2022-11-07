@@ -15,7 +15,7 @@ public class ChatUtil {
     private static CslConfig config;
     private static ChunkSpawnerLimiter plugin;
 
-    public ChatUtil(final ChunkSpawnerLimiter plugin) {
+    public static void init(final @NotNull ChunkSpawnerLimiter plugin) {
         ChatUtil.config = plugin.getCslConfig();
         ChatUtil.plugin = plugin;
     }
