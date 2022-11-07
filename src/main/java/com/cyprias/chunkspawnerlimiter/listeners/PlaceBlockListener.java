@@ -1,6 +1,7 @@
 package com.cyprias.chunkspawnerlimiter.listeners;
 
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
+import com.cyprias.chunkspawnerlimiter.config.CslConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
@@ -21,18 +22,24 @@ public class PlaceBlockListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
+        if(event.isCancelled() || CslConfig.Properties.WATCH_BLOCK_PLACE)
+            return;
+
+
         final Material placedType = event.getBlock().getType();
         if (plugin.getBlocksConfig().hasLimit(placedType)) {
             final Integer limit = plugin.getBlocksConfig().getLimit(placedType);
             if (limit > countBlocksInChunk(event.getBlock().getChunk().getChunkSnapshot(), placedType)) {
-                event.getPlayer().sendMessage(ChatColor.GOLD + "Cannot place more " + ChatColor.RED + placedType +
-                        ChatColor.GOLD + ". Max amount per chunk " + ChatColor.GREEN + limit);
+
+                event.getPlayer().sendMessage(CslConfig.Messages.MAX_AMOUNT_BLOCKS
+                        .replace("{material}",placedType.name())
+                        .replace("{limit}",String.valueOf(limit)));
                 event.setCancelled(true);
             }
         }
     }
 
-    private Integer countBlocksInChunk(final ChunkSnapshot chunkSnapshot, final Material material) {
+    private int countBlocksInChunk(final ChunkSnapshot chunkSnapshot, final Material material) {
         int count = 0;
         for (int x = 0; x < 64; x++) {
             for (int y = 0; y < 64; y++) {
