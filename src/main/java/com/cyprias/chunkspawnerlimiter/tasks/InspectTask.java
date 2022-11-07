@@ -1,7 +1,7 @@
 package com.cyprias.chunkspawnerlimiter.tasks;
 
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
-import com.cyprias.chunkspawnerlimiter.ChatUtil;
+import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

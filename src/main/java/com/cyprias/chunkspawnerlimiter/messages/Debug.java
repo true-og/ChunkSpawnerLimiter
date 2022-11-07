@@ -7,6 +7,7 @@ public final class Debug {
     public static final String REGISTER_LISTENERS = "Registered listeners.";
     public static final String CHUNK_UNLOAD_EVENT = "ChunkUnloadEvent %s %s";
     public static final String CHUNK_LOAD_EVENT = "ChunkLoadEvent %s %s";
+    public static final String BLOCK_PLACE_CHECK = "Material=%s, Count=%d, Limit=%d";
 
     private Debug() {
         throw new UnsupportedOperationException("This operation is not supported");
