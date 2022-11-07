@@ -4,6 +4,7 @@ import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,12 +16,16 @@ public class ChatUtil {
         throw new UnsupportedOperationException();
     }
 
-    public static void tell(@NotNull CommandSender toWhom, String message) {
-        toWhom.sendMessage(colorize(message));
+    public static void message(@NotNull CommandSender target, String message) {
+        target.sendMessage(colorize(message));
     }
 
-    public static void tell(@NotNull CommandSender toWhom, String message, Object... args) {
-        toWhom.sendMessage(String.format(colorize(message), args));
+    public static void message(@NotNull CommandSender target, String message, Object... args) {
+        target.sendMessage(String.format(colorize(message), args));
+    }
+
+    public static void title(@NotNull Player player, final String message) {
+        player.sendTitle(colorize(message),"",10,70,20);
     }
 
     @Contract("_ -> new")
