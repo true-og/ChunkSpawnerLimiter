@@ -17,7 +17,7 @@ import java.util.logging.Level;
  * @author sarhatabaot
  * Extracted from KrakenCore, since it only supports JDK 16+
  */
-public class ConfigFile<T extends JavaPlugin> {
+public abstract class ConfigFile<T extends JavaPlugin> {
     private final String resourcePath;
 
     protected final T plugin;
@@ -67,6 +67,7 @@ public class ConfigFile<T extends JavaPlugin> {
         }
 
         config = YamlConfiguration.loadConfiguration(file);
+        initValues();
     }
 
     public void reloadDefaultConfig() {
@@ -96,4 +97,6 @@ public class ConfigFile<T extends JavaPlugin> {
         }
         return this.config;
     }
+
+    public abstract void initValues();
 }
