@@ -1,5 +1,6 @@
 package com.cyprias.chunkspawnerlimiter.listeners;
 
+import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
@@ -32,19 +33,29 @@ public class PlaceBlockListener implements Listener {
             final Integer limit = plugin.getBlocksConfig().getLimit(placedType);
             int amountInChunk = countBlocksInChunk(event.getBlock().getChunk().getChunkSnapshot(), placedType);
             if (amountInChunk >= limit) {
-                ChatUtil.message(event.getPlayer(), CslConfig.Messages.MAX_AMOUNT_BLOCKS
-                        .replace("{material}", placedType.name())
-                        .replace("{amount}", String.valueOf(limit)));
                 event.setCancelled(true);
+
+                if (plugin.getBlocksConfig().isNotifyMessage()) {
+                    ChatUtil.message(event.getPlayer(), CslConfig.Messages.MAX_AMOUNT_BLOCKS
+                            .replace("{material}", placedType.name())
+                            .replace("{amount}", String.valueOf(limit)));
+                }
+                if (plugin.getBlocksConfig().isNotifyTitle()) {
+                    ChatUtil.title(event.getPlayer(),
+                            CslConfig.Messages.MAX_AMOUNT_BLOCKS_TITLE,
+                            CslConfig.Messages.MAX_AMOUNT_BLOCKS_SUBTITLE,
+                            placedType.name(),
+                            limit);
+                }
             }
-            ChatUtil.debug("Material=%s, Count=%d, Limit=%d", placedType, amountInChunk, limit);
+            ChatUtil.debug(Debug.BLOCK_PLACE_CHECK, placedType, amountInChunk, limit);
         }
     }
 
     private int countBlocksInChunk(final ChunkSnapshot chunkSnapshot, final Material material) {
         int count = 0;
         for (int x = 0; x < 16; x++) {
-            for (int y = -64; y < 256; y++) {
+            for (int y = plugin.getBlocksConfig().getMinY(); y < plugin.getBlocksConfig().getMaxY(); y++) {
                 for (int z = 0; z < 16; z++) {
                     if (chunkSnapshot.getBlockType(x, y, z) == material)
                         count++;

@@ -66,6 +66,8 @@ public class CslConfig {
 		public static String RELOADED_CONFIG = fileConfiguration.getString(path + "reloadedConfig", "&cReloaded csl config.");
 
 		public static String MAX_AMOUNT_BLOCKS = fileConfiguration.getString(path + "maxAmountBlocks", "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}.");
+		public static String MAX_AMOUNT_BLOCKS_TITLE = fileConfiguration.getString(path + "maxAmountBlocksTitle","&6Cannot place more &4{material}&6.");
+		public static String MAX_AMOUNT_BLOCKS_SUBTITLE= fileConfiguration.getString(path + "maxAmountBlocksSubtitle","&6Max amount per chunk &2{amount}.");
 
 		private Messages() {
 			throw new UnsupportedOperationException();

@@ -24,8 +24,17 @@ public class ChatUtil {
         target.sendMessage(String.format(colorize(message), args));
     }
 
-    public static void title(@NotNull Player player, final String message) {
-        player.sendTitle(colorize(message),"",10,70,20);
+    public static void title(@NotNull Player player, final String title, final String subtitle, String material, int amount) {
+        player.sendTitle(replace(colorize(title), material, amount),
+                replace(colorize(subtitle), material, amount),
+                10,
+                70,
+                20);
+    }
+
+    private static String replace(String message, String material, int amount) {
+        return message.replace("{material}", material)
+                .replace("{amount}", String.valueOf(amount));
     }
 
     @Contract("_ -> new")
@@ -40,7 +49,7 @@ public class ChatUtil {
     }
 
     public static void debug(String message, Object... args) {
-        ChatUtil.debug(String.format(message,args));
+        ChatUtil.debug(String.format(message, args));
     }
 
 
