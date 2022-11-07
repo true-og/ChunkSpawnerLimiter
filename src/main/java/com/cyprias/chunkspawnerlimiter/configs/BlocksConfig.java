@@ -11,6 +11,7 @@ import java.util.Map;
  * @author sarhatabaot
  */
 public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
+    private boolean enabled;
     private Map<Material, Integer> materialLimits;
     private boolean notifyMessage;
     private boolean notifyTitle;
@@ -25,6 +26,7 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     @Override
     public void initValues() {
+        this.enabled = config.getBoolean("enabled", false);
         this.materialLimits = convertToMaterialLimits(config.getConfigurationSection("blocks").getValues(false));
         this.notifyMessage = config.getBoolean("notify.message", false);
         this.notifyTitle = config.getBoolean("notify.title", true);
@@ -82,5 +84,9 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     public int getMaxY() {
         return maxY;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

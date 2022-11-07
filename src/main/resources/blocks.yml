@@ -1,3 +1,6 @@
+# Should this feature be enabled?
+enabled: false
+
 # Should we notify the player via a message or a title?
 notify:
   title: true

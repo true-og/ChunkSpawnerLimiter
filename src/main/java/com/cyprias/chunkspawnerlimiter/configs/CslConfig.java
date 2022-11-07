@@ -3,17 +3,25 @@ package com.cyprias.chunkspawnerlimiter.configs;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CslConfig {
-	private static FileConfiguration fileConfiguration = ChunkSpawnerLimiter.getInstance().getConfig();
-	public static List<String> EXCLUDED_WORLDS = fileConfiguration.getStringList("excluded-worlds");
+public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
+	private List<String> excludedWorlds;
 
-	private CslConfig() {
-		throw new UnsupportedOperationException();
+
+	public CslConfig(final @NotNull ChunkSpawnerLimiter plugin) {
+		super(plugin, "", "config.yml", "");
 	}
 
+	@Override
+	public void initValues() {
+		this.excludedWorlds = config.getStringList("excluded-worlds");
+	}
+
+	private static FileConfiguration fileConfiguration = ChunkSpawnerLimiter.getInstance().getConfig();
+	public static List<String> EXCLUDED_WORLDS = fileConfiguration.getStringList("excluded-worlds");
 
 	public static void reload() {
 		fileConfiguration = ChunkSpawnerLimiter.getInstance().getConfig();
@@ -52,9 +60,6 @@ public class CslConfig {
 		public static boolean NOTIFY_PLAYERS = fileConfiguration.getBoolean(path + "notify-players", false);
 		public static boolean PRESERVE_NAMED_ENTITIES = fileConfiguration.getBoolean(path + "preserve-named-entities", true);
 		public static List<String> IGNORE_METADATA = fileConfiguration.getStringList(path + "ignore-metadata");
-
-		public static boolean WATCH_BLOCK_PLACE = fileConfiguration.getBoolean(path + "watch-block-place", true);
-
 		private Properties() {
 			throw new UnsupportedOperationException();
 		}

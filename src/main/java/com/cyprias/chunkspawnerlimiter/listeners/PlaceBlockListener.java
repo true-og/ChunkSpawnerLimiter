@@ -22,7 +22,7 @@ public class PlaceBlockListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (event.isCancelled() || !CslConfig.Properties.WATCH_BLOCK_PLACE)
+        if (event.isCancelled() || !plugin.getBlocksConfig().isEnabled())
             return;
 
         if (CslConfig.EXCLUDED_WORLDS.contains(event.getBlock().getChunk().getWorld().getName()))
