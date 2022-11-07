@@ -1,15 +1,16 @@
-package com.cyprias.chunkspawnerlimiter;
+package com.cyprias.chunkspawnerlimiter.config;
 
+import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
 
-public class Config {
+public class CslConfig {
 	private static FileConfiguration fileConfiguration = ChunkSpawnerLimiter.getInstance().getConfig();
 	public static List<String> EXCLUDED_WORLDS = fileConfiguration.getStringList("excluded-worlds");
 
-	private Config() {
+	private CslConfig() {
 		throw new UnsupportedOperationException();
 	}
 
