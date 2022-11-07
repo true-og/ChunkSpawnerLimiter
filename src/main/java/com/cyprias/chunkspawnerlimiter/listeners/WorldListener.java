@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -24,23 +23,28 @@ import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
-@RequiredArgsConstructor
 public class WorldListener implements Listener {
     private final ChunkSpawnerLimiter plugin;
+    private static CslConfig config;
     private final Map<Chunk, Integer> chunkTasks = new HashMap<>();
+
+    public WorldListener(final ChunkSpawnerLimiter plugin) {
+        this.plugin = plugin;
+        WorldListener.config = plugin.getCslConfig();
+    }
 
     @EventHandler
     public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
         ChatUtil.debug(Debug.CHUNK_LOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
-        if (CslConfig.Properties.ACTIVE_INSPECTIONS) {
+        if (plugin.getCslConfig().getProperties().isActiveInspections()) {
             InspectTask inspectTask = new InspectTask(event.getChunk());
-            long delay = CslConfig.Properties.INSPECTION_FREQUENCY * 20L;
+            long delay = plugin.getCslConfig().getProperties().getInspectionFrequency() * 20L;
             BukkitTask task = inspectTask.runTaskTimer(plugin, delay, delay);
             inspectTask.setId(task.getTaskId());
             chunkTasks.put(event.getChunk(), task.getTaskId());
         }
 
-        if (CslConfig.Properties.CHECK_CHUNK_LOAD)
+        if (plugin.getCslConfig().getProperties().isCheckChunkLoad())
             checkChunk(event.getChunk());
     }
 
@@ -53,7 +57,7 @@ public class WorldListener implements Listener {
             chunkTasks.remove(event.getChunk());
         }
 
-        if (CslConfig.Properties.CHECK_CHUNK_UNLOAD)
+        if (plugin.getCslConfig().getProperties().isCheckChunkUnload())
             checkChunk(event.getChunk());
     }
 
@@ -63,7 +67,7 @@ public class WorldListener implements Listener {
      * @param chunk Chunk
      */
     public static void checkChunk(@NotNull Chunk chunk) {
-        if (CslConfig.EXCLUDED_WORLDS.contains(chunk.getWorld().getName())) {
+        if (config.getExcludedWorlds().contains(chunk.getWorld().getName())) {
             return;
         }
 
@@ -72,11 +76,11 @@ public class WorldListener implements Listener {
 
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
             String entityType = entry.getKey();
-            int limit = CslConfig.getEntityLimit(entityType);
+            int limit = config.getEntityLimit(entityType);
 
             if (entry.getValue().size() > limit) {
                 ChatUtil.debug(Debug.REMOVING_ENTITY_AT,entry.getValue().size() - limit,entityType,chunk.getX(),chunk.getZ());
-                if (CslConfig.Properties.NOTIFY_PLAYERS) {
+                if (config.getProperties().isNotifyPlayers()) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
                 removeEntities(entry, limit);
@@ -85,13 +89,13 @@ public class WorldListener implements Listener {
     }
 
     private static boolean hasCustomName(Entity entity) {
-        if (CslConfig.Properties.PRESERVE_NAMED_ENTITIES)
+        if (config.getProperties().isPreserveNamedEntities())
             return entity.getCustomName()!=null;
         return false;
     }
 
     private static boolean hasMetaData(Entity entity) {
-        for (String metadata : CslConfig.Properties.IGNORE_METADATA) {
+        for (String metadata : config.getProperties().getIgnoreMetadata()) {
             if (entity.hasMetadata(metadata)) {
                 return true;
             }
@@ -116,12 +120,12 @@ public class WorldListener implements Listener {
             String entityType = type.name();
             String entityMobGroup = MobGroupCompare.getMobGroup(entities[i]);
 
-            if (CslConfig.contains("entities." + entityType)) {
+            if (config.contains("entities." + entityType)) {
                 modifiedTypes.putIfAbsent(entityType,new ArrayList<>());
                 modifiedTypes.get(entityType).add(entities[i]);
             }
 
-            if (CslConfig.contains("entities." + entityMobGroup)) {
+            if (config.contains("entities." + entityMobGroup)) {
                 modifiedTypes.putIfAbsent(entityMobGroup,new ArrayList<>());
                 modifiedTypes.get(entityMobGroup).add(entities[i]);
             }
@@ -135,7 +139,7 @@ public class WorldListener implements Listener {
             if (entities[i] instanceof Player) {
                 final Player p = (Player) entities[i];
 
-                ChatUtil.message(p, CslConfig.Messages.REMOVED_ENTITIES, entry.getValue().size() - limit, entityType);
+                ChatUtil.message(p, config.getMessages().getRemovedEntities(), entry.getValue().size() - limit, entityType);
             }
         }
     }

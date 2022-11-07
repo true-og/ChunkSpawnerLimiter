@@ -25,7 +25,7 @@ public class PlaceBlockListener implements Listener {
         if (event.isCancelled() || !plugin.getBlocksConfig().isEnabled())
             return;
 
-        if (CslConfig.EXCLUDED_WORLDS.contains(event.getBlock().getChunk().getWorld().getName()))
+        if (plugin.getCslConfig().getExcludedWorlds().contains(event.getBlock().getChunk().getWorld().getName()))
             return;
 
         final Material placedType = event.getBlock().getType();
@@ -36,14 +36,14 @@ public class PlaceBlockListener implements Listener {
                 event.setCancelled(true);
 
                 if (plugin.getBlocksConfig().isNotifyMessage()) {
-                    ChatUtil.message(event.getPlayer(), CslConfig.Messages.MAX_AMOUNT_BLOCKS
+                    ChatUtil.message(event.getPlayer(), plugin.getCslConfig().getMessages().getMaxAmountBlocks()
                             .replace("{material}", placedType.name())
                             .replace("{amount}", String.valueOf(limit)));
                 }
                 if (plugin.getBlocksConfig().isNotifyTitle()) {
                     ChatUtil.title(event.getPlayer(),
-                            CslConfig.Messages.MAX_AMOUNT_BLOCKS_TITLE,
-                            CslConfig.Messages.MAX_AMOUNT_BLOCKS_SUBTITLE,
+                            plugin.getCslConfig().getMessages().getMaxAmountBlocksTitle(),
+                            plugin.getCslConfig().getMessages().getMaxAmountBlocksSubtitle(),
                             placedType.name(),
                             limit);
                 }

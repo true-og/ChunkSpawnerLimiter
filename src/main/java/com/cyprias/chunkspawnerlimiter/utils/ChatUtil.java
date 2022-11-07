@@ -12,8 +12,12 @@ import org.jetbrains.annotations.NotNull;
  * ChatUtil
  */
 public class ChatUtil {
-    private ChatUtil() {
-        throw new UnsupportedOperationException();
+    private static CslConfig config;
+    private static ChunkSpawnerLimiter plugin;
+
+    public ChatUtil(final ChunkSpawnerLimiter plugin) {
+        ChatUtil.config = plugin.getCslConfig();
+        ChatUtil.plugin = plugin;
     }
 
     public static void message(@NotNull CommandSender target, String message) {
@@ -43,8 +47,8 @@ public class ChatUtil {
     }
 
     public static void debug(String message) {
-        if (CslConfig.Properties.DEBUG_MESSAGES) {
-            ChunkSpawnerLimiter.getInstance().getLogger().info(() -> "DEBUG " + message);
+        if (config.getProperties().isDebugMessages()) {
+            plugin.getLogger().info(() -> "DEBUG " + message);
         }
     }
 

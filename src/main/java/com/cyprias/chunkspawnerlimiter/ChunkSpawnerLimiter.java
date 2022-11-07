@@ -3,6 +3,7 @@ package com.cyprias.chunkspawnerlimiter;
 import co.aikar.commands.PaperCommandManager;
 import com.cyprias.chunkspawnerlimiter.commands.CslCommand;
 import com.cyprias.chunkspawnerlimiter.configs.BlocksConfig;
+import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
 import com.cyprias.chunkspawnerlimiter.listeners.PlaceBlockListener;
 import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
@@ -14,47 +15,39 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChunkSpawnerLimiter extends JavaPlugin {
-	private static ChunkSpawnerLimiter instance;
-	private BlocksConfig blocksConfig;
+	private CslConfig cslConfig;
 
-	public static void setInstance(final ChunkSpawnerLimiter plugin) {
-		ChunkSpawnerLimiter.instance = plugin;
-	}
+	private BlocksConfig blocksConfig;
 
 	@Override
 	public void onEnable() {
-		setInstance(this);
 		initConfigs();
 
 		registerListeners();
 		PaperCommandManager paperCommandManager = new PaperCommandManager(this);
-		paperCommandManager.registerCommand(new CslCommand());
+		paperCommandManager.registerCommand(new CslCommand(this));
 		new Metrics(this, 4195);
 	}
 
 	@Override
 	public void onDisable() {
 		getServer().getScheduler().cancelTasks(this);
-		setInstance(null);
 	}
 
-	public static ChunkSpawnerLimiter getInstance() {
-		return instance;
-	}
 
 	private void initConfigs() {
-		saveDefaultConfig();
+		this.cslConfig = new CslConfig(this);
 		this.blocksConfig = new BlocksConfig(this);
 	}
 
 	public void reloadConfigs() {
-		reloadConfig();
+		this.cslConfig.reloadConfig();
 		this.blocksConfig.reloadConfig();
 	}
 
 	private void registerListeners() {
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(new EntityListener(), this);
+		pm.registerEvents(new EntityListener(this), this);
 		pm.registerEvents(new WorldListener(this), this);
 		pm.registerEvents(new PlaceBlockListener(this),this);
 		ChatUtil.debug(Debug.REGISTER_LISTENERS);
@@ -66,5 +59,9 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 
 	public BlocksConfig getBlocksConfig() {
 		return blocksConfig;
+	}
+
+	public CslConfig getCslConfig() {
+		return cslConfig;
 	}
 }

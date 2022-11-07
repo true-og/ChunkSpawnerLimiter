@@ -2,12 +2,13 @@ package com.cyprias.chunkspawnerlimiter.configs;
 
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
+	private Messages messages;
+	private Properties properties;
 	private List<String> excludedWorlds;
 
 
@@ -18,66 +19,127 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	@Override
 	public void initValues() {
 		this.excludedWorlds = config.getStringList("excluded-worlds");
+		this.messages = new Messages();
+		this.properties = new Properties();
 	}
 
-	private static FileConfiguration fileConfiguration = ChunkSpawnerLimiter.getInstance().getConfig();
-	public static List<String> EXCLUDED_WORLDS = fileConfiguration.getStringList("excluded-worlds");
-
-	public static void reload() {
-		fileConfiguration = ChunkSpawnerLimiter.getInstance().getConfig();
+	public int getEntityLimit(String entityType) {
+		return config.getInt("entities." + entityType);
 	}
 
-	public static int getEntityLimit(String entityType) {
-		return fileConfiguration.getInt("entities." + entityType);
+	public boolean isSpawnReason(String reason) {
+		return config.getBoolean("spawn-reasons." + reason);
 	}
 
-	public static boolean isSpawnReason(String reason) {
-		return fileConfiguration.getBoolean("spawn-reasons." + reason);
+	public boolean contains(String property) {
+		return config.contains(property);
 	}
 
-	public static boolean contains(String property) {
-		return fileConfiguration.contains(property);
+	public ConfigurationSection getSpawnReasons() {
+		return config.getConfigurationSection("spawn-reasons");
 	}
 
-	public static ConfigurationSection getSpawnReasons() {
-		return fileConfiguration.getConfigurationSection("spawn-reasons");
+	public ConfigurationSection getEntityLimits() {
+		return config.getConfigurationSection("entities");
 	}
 
-	public static ConfigurationSection getEntityLimits() {
-		return fileConfiguration.getConfigurationSection("entities");
-	}
+	public class Properties {
+		private final String path = "properties.";
+		private boolean debugMessages = config.getBoolean(path + "debug-messages");
+		private boolean checkChunkLoad = config.getBoolean(path + "check-chunk-load");
+		private boolean checkChunkUnload = config.getBoolean(path + "check-chunk-unload");
+		private boolean activeInspections = config.getBoolean(path + "active-inspections");
+		private boolean watchCreatureSpawns = config.getBoolean(path + "watch-creature-spawns");
+		private boolean watchVehicleCreate = config.getBoolean(path + "watch-vehicle-spawns");
+		private int checkSurroundingChunks = config.getInt(path + "check-surrounding-chunks");
+		private int inspectionFrequency = config.getInt(path + "inspection-frequency", 300);
+		private boolean notifyPlayers = config.getBoolean(path + "notify-players", false);
+		private boolean preserveNamedEntities = config.getBoolean(path + "preserve-named-entities", true);
+		private List<String> ignoreMetadata = config.getStringList(path + "ignore-metadata");
 
-	public static class Properties {
-		private static String path = "properties.";
-		public static boolean DEBUG_MESSAGES = fileConfiguration.getBoolean(path + "debug-messages");
-		public static boolean CHECK_CHUNK_LOAD = fileConfiguration.getBoolean(path + "check-chunk-load");
-		public static boolean CHECK_CHUNK_UNLOAD = fileConfiguration.getBoolean(path + "check-chunk-unload");
-		public static boolean ACTIVE_INSPECTIONS = fileConfiguration.getBoolean(path + "active-inspections");
-		public static boolean WATCH_CREATURE_SPAWNS = fileConfiguration.getBoolean(path + "watch-creature-spawns");
-		public static boolean WATCH_VEHICLE_CREATE = fileConfiguration.getBoolean(path + "watch-vehicle-spawns");
-		public static int CHECK_SURROUNDING_CHUNKS = fileConfiguration.getInt(path + "check-surrounding-chunks");
-		public static int INSPECTION_FREQUENCY = fileConfiguration.getInt(path + "inspection-frequency", 300);
-		public static boolean NOTIFY_PLAYERS = fileConfiguration.getBoolean(path + "notify-players", false);
-		public static boolean PRESERVE_NAMED_ENTITIES = fileConfiguration.getBoolean(path + "preserve-named-entities", true);
-		public static List<String> IGNORE_METADATA = fileConfiguration.getStringList(path + "ignore-metadata");
-		private Properties() {
-			throw new UnsupportedOperationException();
+		public boolean isDebugMessages() {
+			return debugMessages;
+		}
+
+		public boolean isCheckChunkLoad() {
+			return checkChunkLoad;
+		}
+
+		public boolean isCheckChunkUnload() {
+			return checkChunkUnload;
+		}
+
+		public  boolean isActiveInspections() {
+			return activeInspections;
+		}
+
+		public  boolean isWatchCreatureSpawns() {
+			return watchCreatureSpawns;
+		}
+
+		public  boolean isWatchVehicleCreate() {
+			return watchVehicleCreate;
+		}
+
+		public  int getCheckSurroundingChunks() {
+			return checkSurroundingChunks;
+		}
+
+		public  int getInspectionFrequency() {
+			return inspectionFrequency;
+		}
+
+		public  boolean isNotifyPlayers() {
+			return notifyPlayers;
+		}
+
+		public  boolean isPreserveNamedEntities() {
+			return preserveNamedEntities;
+		}
+
+		public  List<String> getIgnoreMetadata() {
+			return ignoreMetadata;
 		}
 	}
 
-	public static class Messages {
-		private static String path = "messages.";
-		public static String REMOVED_ENTITIES = fileConfiguration.getString(path + "removedEntities");
-		public static String RELOADED_CONFIG = fileConfiguration.getString(path + "reloadedConfig", "&cReloaded csl config.");
+	public class Messages {
+		private final String path = "messages.";
+		private String removedEntities = config.getString(path + "removedEntities");
+		private String reloadedConfig = config.getString(path + "reloadedConfig", "&cReloaded csl config.");
 
-		public static String MAX_AMOUNT_BLOCKS = fileConfiguration.getString(path + "maxAmountBlocks", "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}.");
-		public static String MAX_AMOUNT_BLOCKS_TITLE = fileConfiguration.getString(path + "maxAmountBlocksTitle","&6Cannot place more &4{material}&6.");
-		public static String MAX_AMOUNT_BLOCKS_SUBTITLE= fileConfiguration.getString(path + "maxAmountBlocksSubtitle","&6Max amount per chunk &2{amount}.");
+		private String maxAmountBlocks = config.getString(path + "maxAmountBlocks", "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}.");
+		private String maxAmountBlocksTitle = config.getString(path + "maxAmountBlocksTitle","&6Cannot place more &4{material}&6.");
+		private String maxAmountBlocksSubtitle = config.getString(path + "maxAmountBlocksSubtitle","&6Max amount per chunk &2{amount}.");
+		public String getRemovedEntities() {
+			return removedEntities;
+		}
 
-		private Messages() {
-			throw new UnsupportedOperationException();
+		public  String getReloadedConfig() {
+			return reloadedConfig;
+		}
+
+		public  String getMaxAmountBlocks() {
+			return maxAmountBlocks;
+		}
+
+		public  String getMaxAmountBlocksTitle() {
+			return maxAmountBlocksTitle;
+		}
+
+		public  String getMaxAmountBlocksSubtitle() {
+			return maxAmountBlocksSubtitle;
 		}
 	}
 
+	public List<String> getExcludedWorlds() {
+		return excludedWorlds;
+	}
 
+	public Messages getMessages() {
+		return messages;
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
 }

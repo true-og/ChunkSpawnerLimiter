@@ -1,5 +1,6 @@
 package com.cyprias.chunkspawnerlimiter.listeners;
 
+import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import org.bukkit.Chunk;
@@ -12,17 +13,23 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Spawn Reasons at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+ * Spawn Reasons at <a href="https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html">CreatureSpawnEvent.SpawnReason</a>
  */
 public class EntityListener implements Listener {
+    private final CslConfig config;
+
+    public EntityListener(final ChunkSpawnerLimiter plugin) {
+        this.config = plugin.getCslConfig();
+    }
+
     @EventHandler
     public void onCreatureSpawnEvent(@NotNull CreatureSpawnEvent event) {
-        if (event.isCancelled() || !CslConfig.Properties.WATCH_CREATURE_SPAWNS)
+        if (event.isCancelled() || !config.getProperties().isWatchCreatureSpawns())
             return;
 
         final String reason = event.getSpawnReason().toString();
 
-        if (!CslConfig.isSpawnReason(reason)) {
+        if (!config.isSpawnReason(reason)) {
             ChatUtil.debug(Debug.IGNORE_ENTITY, event.getEntity().getType(), reason);
             return;
         }
@@ -35,7 +42,7 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onVehicleCreateEvent(@NotNull VehicleCreateEvent event) {
-        if (event.isCancelled() || !CslConfig.Properties.WATCH_VEHICLE_CREATE)
+        if (event.isCancelled() || !config.getProperties().isWatchVehicleCreate())
             return;
 
         Chunk chunk = event.getVehicle().getLocation().getChunk();
@@ -45,7 +52,7 @@ public class EntityListener implements Listener {
 
 
     private void checkSurroundings(Chunk chunk) {
-        int surrounding = CslConfig.Properties.CHECK_SURROUNDING_CHUNKS;
+        int surrounding = config.getProperties().getCheckSurroundingChunks();
         if (surrounding > 0) {
             for (int x = chunk.getX() + surrounding; x >= (chunk.getX() - surrounding); x--) {
                 for (int z = chunk.getZ() + surrounding; z >= (chunk.getZ() - surrounding); z--) {
