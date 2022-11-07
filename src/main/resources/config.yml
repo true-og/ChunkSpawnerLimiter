@@ -18,6 +18,9 @@ properties:
   # Check a chunk when a vehicle spawns (VehicleCreateEvent).
   watch-vehicle-create-event: true
 
+  # Check a chunk when a block is placed.
+  watch-block-place: true
+
   # Radius of surrounding chunks to check.
   check-surrounding-chunks: 1
 
@@ -100,7 +103,3 @@ messages:
   removedEntities: "&7Removed %s %s in your chunk."
   reloadedConfig: "&cReloaded csl config."
   maxAmountBlocks: "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}."
-
-blocks:
-  messages: false
-  titles: true
