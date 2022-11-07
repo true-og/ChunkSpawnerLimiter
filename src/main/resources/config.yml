@@ -101,3 +101,6 @@ messages:
   reloadedConfig: "&cReloaded csl config."
   maxAmountBlocks: "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}."
 
+blocks:
+  messages: false
+  titles: true
