@@ -1,13 +1,13 @@
 package com.cyprias.chunkspawnerlimiter.listeners;
 
-import com.cyprias.chunkspawnerlimiter.ChatUtil;
+import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import org.bukkit.Chunk;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import com.cyprias.chunkspawnerlimiter.config.CslConfig;
+import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.jetbrains.annotations.NotNull;
 

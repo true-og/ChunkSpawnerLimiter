@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.cyprias.chunkspawnerlimiter.ChatUtil;
+import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.cyprias.chunkspawnerlimiter.config.CslConfig;
+import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
 import org.bukkit.scheduler.BukkitTask;

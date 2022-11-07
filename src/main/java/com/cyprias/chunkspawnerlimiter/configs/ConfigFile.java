@@ -1,4 +1,4 @@
-package com.cyprias.chunkspawnerlimiter.config;
+package com.cyprias.chunkspawnerlimiter.configs;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

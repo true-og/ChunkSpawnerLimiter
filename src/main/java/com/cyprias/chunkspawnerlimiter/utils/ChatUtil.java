@@ -1,6 +1,7 @@
-package com.cyprias.chunkspawnerlimiter;
+package com.cyprias.chunkspawnerlimiter.utils;
 
-import com.cyprias.chunkspawnerlimiter.config.CslConfig;
+import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
+import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Contract;

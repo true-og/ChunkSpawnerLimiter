@@ -1,9 +1,8 @@
 package com.cyprias.chunkspawnerlimiter.listeners;
 
+import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
-import com.cyprias.chunkspawnerlimiter.config.CslConfig;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
+import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -33,7 +32,7 @@ public class PlaceBlockListener implements Listener {
             final Integer limit = plugin.getBlocksConfig().getLimit(placedType);
             if (limit > countBlocksInChunk(event.getBlock().getChunk().getChunkSnapshot(), placedType)) {
 
-                event.getPlayer().sendMessage(CslConfig.Messages.MAX_AMOUNT_BLOCKS
+                ChatUtil.tell(event.getPlayer(),CslConfig.Messages.MAX_AMOUNT_BLOCKS
                         .replace("{material}",placedType.name())
                         .replace("{limit}",String.valueOf(limit)));
                 event.setCancelled(true);

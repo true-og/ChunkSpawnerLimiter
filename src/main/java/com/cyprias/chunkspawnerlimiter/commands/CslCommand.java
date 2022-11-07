@@ -1,12 +1,14 @@
-package com.cyprias.chunkspawnerlimiter;
+package com.cyprias.chunkspawnerlimiter.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
-import com.cyprias.chunkspawnerlimiter.config.CslConfig;
+import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
+import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import com.cyprias.chunkspawnerlimiter.messages.Command;
+import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;

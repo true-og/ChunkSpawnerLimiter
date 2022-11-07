@@ -1,10 +1,9 @@
-package com.cyprias.chunkspawnerlimiter.config;
+package com.cyprias.chunkspawnerlimiter.configs;
 
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.Collections;
 import java.util.List;
 
 public class CslConfig {

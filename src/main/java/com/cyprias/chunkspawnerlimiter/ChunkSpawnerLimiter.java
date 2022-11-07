@@ -1,11 +1,13 @@
 package com.cyprias.chunkspawnerlimiter;
 
 import co.aikar.commands.PaperCommandManager;
-import com.cyprias.chunkspawnerlimiter.config.BlocksConfig;
+import com.cyprias.chunkspawnerlimiter.commands.CslCommand;
+import com.cyprias.chunkspawnerlimiter.configs.BlocksConfig;
 import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
 import com.cyprias.chunkspawnerlimiter.listeners.PlaceBlockListener;
 import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
+import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -43,7 +45,6 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 	private void initConfigs() {
 		saveDefaultConfig();
 		this.blocksConfig = new BlocksConfig(this);
-		this.blocksConfig.saveDefaultConfig();
 	}
 
 	public void reloadConfigs() {
