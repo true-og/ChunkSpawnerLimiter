@@ -15,6 +15,9 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
     private boolean notifyMessage;
     private boolean notifyTitle;
 
+    private int minY;
+    private int maxY;
+
     public BlocksConfig(final @NotNull ChunkSpawnerLimiter plugin) {
         super(plugin, "", "blocks.yml", "");
         saveDefaultConfig();
@@ -25,6 +28,8 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
         this.materialLimits = convertToMaterialLimits(config.getConfigurationSection("blocks").getValues(false));
         this.notifyMessage = config.getBoolean("notify.message", false);
         this.notifyTitle = config.getBoolean("notify.title", true);
+        this.minY = config.getInt("count.min-y", -64);
+        this.maxY = config.getInt("count.max-y", 256);
     }
 
     public Map<Material, Integer> getMaterialLimits() {
@@ -69,5 +74,13 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     public boolean isNotifyTitle() {
         return notifyTitle;
+    }
+
+    public int getMinY() {
+        return minY;
+    }
+
+    public int getMaxY() {
+        return maxY;
     }
 }
