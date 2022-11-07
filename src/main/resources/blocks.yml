@@ -1,8 +1,9 @@
+# Should we notify the player via a message or a title?
+notify:
+  title: true
+  message: false
+
 # Set blocks to block per chunk
 # Anything from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html is supported.
-notify:
-  titles: true
-  messages: true
-
 blocks:
   SPAWNER: 10
