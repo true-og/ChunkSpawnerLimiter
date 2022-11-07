@@ -21,7 +21,7 @@ public class CslCommand extends BaseCommand {
     @CommandPermission(Command.Reload.PERMISSION)
     @Description(Command.Reload.DESCRIPTION)
     public void onReload(final CommandSender sender){
-        ChunkSpawnerLimiter.getInstance().reloadConfig();
+        ChunkSpawnerLimiter.getInstance().reloadConfigs();
         CslConfig.reload();
         ChatUtil.tell(sender, CslConfig.Messages.RELOADED_CONFIG);
     }
