@@ -25,6 +25,8 @@ public class PlaceBlockListener implements Listener {
         if(event.isCancelled() || CslConfig.Properties.WATCH_BLOCK_PLACE)
             return;
 
+        if(CslConfig.EXCLUDED_WORLDS.contains(event.getBlock().getChunk().getWorld().getName()))
+            return;
 
         final Material placedType = event.getBlock().getType();
         if (plugin.getBlocksConfig().hasLimit(placedType)) {
