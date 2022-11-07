@@ -1,6 +1,7 @@
 package com.cyprias.chunkspawnerlimiter;
 
 import co.aikar.commands.PaperCommandManager;
+import com.cyprias.chunkspawnerlimiter.config.BlocksConfig;
 import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
 import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
@@ -11,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChunkSpawnerLimiter extends JavaPlugin {
 	private static ChunkSpawnerLimiter instance;
+	private BlocksConfig blocksConfig;
 
 	public static void setInstance(final ChunkSpawnerLimiter plugin) {
 		ChunkSpawnerLimiter.instance = plugin;
@@ -19,7 +21,8 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		setInstance(this);
-		saveDefaultConfig();
+		initConfigs();
+
 		registerListeners();
 		PaperCommandManager paperCommandManager = new PaperCommandManager(this);
 		paperCommandManager.registerCommand(new CslCommand());
@@ -34,6 +37,17 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 
 	public static ChunkSpawnerLimiter getInstance() {
 		return instance;
+	}
+
+	private void initConfigs() {
+		saveDefaultConfig();
+		this.blocksConfig = new BlocksConfig(this);
+		this.blocksConfig.saveDefaultConfig();
+	}
+
+	public void reloadConfigs() {
+		reloadConfig();
+		this.blocksConfig.reloadConfig();
 	}
 
 	private void registerListeners() {

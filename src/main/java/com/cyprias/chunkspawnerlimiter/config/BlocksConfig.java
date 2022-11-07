@@ -13,7 +13,7 @@ import java.util.Map;
 public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
     private final Map<Material, Integer> materialLimits;
 
-    protected BlocksConfig(final @NotNull ChunkSpawnerLimiter plugin) {
+    public BlocksConfig(final @NotNull ChunkSpawnerLimiter plugin) {
         super(plugin, "", "blocks.yml", "");
 
         this.materialLimits = convertToMaterialLimits(config.getConfigurationSection("blocks").getValues(false));
