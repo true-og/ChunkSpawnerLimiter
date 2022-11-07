@@ -3,6 +3,7 @@ package com.cyprias.chunkspawnerlimiter;
 import co.aikar.commands.PaperCommandManager;
 import com.cyprias.chunkspawnerlimiter.config.BlocksConfig;
 import com.cyprias.chunkspawnerlimiter.listeners.EntityListener;
+import com.cyprias.chunkspawnerlimiter.listeners.PlaceBlockListener;
 import com.cyprias.chunkspawnerlimiter.listeners.WorldListener;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import org.bstats.bukkit.Metrics;
@@ -54,6 +55,7 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new EntityListener(), this);
 		pm.registerEvents(new WorldListener(this), this);
+		pm.registerEvents(new PlaceBlockListener(this),this);
 		ChatUtil.debug(Debug.REGISTER_LISTENERS);
 	}
 
