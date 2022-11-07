@@ -61,4 +61,7 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 		Bukkit.getServer().getScheduler().cancelTask(taskID);
 	}
 
+	public BlocksConfig getBlocksConfig() {
+		return blocksConfig;
+	}
 }
