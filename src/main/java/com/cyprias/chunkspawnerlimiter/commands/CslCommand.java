@@ -25,7 +25,7 @@ public class CslCommand extends BaseCommand {
     public void onReload(final CommandSender sender){
         ChunkSpawnerLimiter.getInstance().reloadConfigs();
         CslConfig.reload();
-        ChatUtil.tell(sender, CslConfig.Messages.RELOADED_CONFIG);
+        ChatUtil.message(sender, CslConfig.Messages.RELOADED_CONFIG);
     }
 
 
@@ -34,22 +34,22 @@ public class CslCommand extends BaseCommand {
     @CommandPermission(Command.Settings.PERMISSION)
     @Description(Command.Settings.DESCRIPTION)
     public void onSettings(final CommandSender sender) {
-        ChatUtil.tell(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
-        ChatUtil.tell(sender,"&2&l-- Properties --");
-        ChatUtil.tell(sender,"Debug Message: %s", CslConfig.Properties.DEBUG_MESSAGES);
-        ChatUtil.tell(sender,"Check Chunk Load: %s", CslConfig.Properties.CHECK_CHUNK_LOAD);
-        ChatUtil.tell(sender,"Check Chunk Unload: %s", CslConfig.Properties.CHECK_CHUNK_UNLOAD);
-        ChatUtil.tell(sender,"Active Inspection: %s", CslConfig.Properties.ACTIVE_INSPECTIONS);
-        ChatUtil.tell(sender,"Watch Creature Spawns: %s", CslConfig.Properties.WATCH_CREATURE_SPAWNS);
-        ChatUtil.tell(sender,"Check Surrounding Chunks: %s", CslConfig.Properties.CHECK_SURROUNDING_CHUNKS);
-        ChatUtil.tell(sender,"Inspection Frequency: %d", CslConfig.Properties.INSPECTION_FREQUENCY);
-        ChatUtil.tell(sender,"Notify Players: %s", CslConfig.Properties.NOTIFY_PLAYERS);
-        ChatUtil.tell(sender,"Preserve Named Entities: %s", CslConfig.Properties.PRESERVE_NAMED_ENTITIES);
-        ChatUtil.tell(sender,"Ignore Metadata: %s", CslConfig.Properties.IGNORE_METADATA.toString());
-        ChatUtil.tell(sender,"Excluded Worlds: %s", CslConfig.EXCLUDED_WORLDS);
-        ChatUtil.tell(sender,"&2&l-- Messages --");
-        ChatUtil.tell(sender,"Reloaded Config: %s", CslConfig.Messages.RELOADED_CONFIG);
-        ChatUtil.tell(sender,"Removed Entities: %s", CslConfig.Messages.REMOVED_ENTITIES);
+        ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
+        ChatUtil.message(sender,"&2&l-- Properties --");
+        ChatUtil.message(sender,"Debug Message: %s", CslConfig.Properties.DEBUG_MESSAGES);
+        ChatUtil.message(sender,"Check Chunk Load: %s", CslConfig.Properties.CHECK_CHUNK_LOAD);
+        ChatUtil.message(sender,"Check Chunk Unload: %s", CslConfig.Properties.CHECK_CHUNK_UNLOAD);
+        ChatUtil.message(sender,"Active Inspection: %s", CslConfig.Properties.ACTIVE_INSPECTIONS);
+        ChatUtil.message(sender,"Watch Creature Spawns: %s", CslConfig.Properties.WATCH_CREATURE_SPAWNS);
+        ChatUtil.message(sender,"Check Surrounding Chunks: %s", CslConfig.Properties.CHECK_SURROUNDING_CHUNKS);
+        ChatUtil.message(sender,"Inspection Frequency: %d", CslConfig.Properties.INSPECTION_FREQUENCY);
+        ChatUtil.message(sender,"Notify Players: %s", CslConfig.Properties.NOTIFY_PLAYERS);
+        ChatUtil.message(sender,"Preserve Named Entities: %s", CslConfig.Properties.PRESERVE_NAMED_ENTITIES);
+        ChatUtil.message(sender,"Ignore Metadata: %s", CslConfig.Properties.IGNORE_METADATA.toString());
+        ChatUtil.message(sender,"Excluded Worlds: %s", CslConfig.EXCLUDED_WORLDS);
+        ChatUtil.message(sender,"&2&l-- Messages --");
+        ChatUtil.message(sender,"Reloaded Config: %s", CslConfig.Messages.RELOADED_CONFIG);
+        ChatUtil.message(sender,"Removed Entities: %s", CslConfig.Messages.REMOVED_ENTITIES);
     }
 
     @Subcommand(Command.Info.COMMAND)
@@ -57,16 +57,16 @@ public class CslCommand extends BaseCommand {
     @CommandPermission(Command.Info.PERMISSION)
     @Description(Command.Info.DESCRIPTION)
     public void onInfo(final CommandSender sender) {
-        ChatUtil.tell(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
-        ChatUtil.tell(sender,"&2&l-- Reasons to cull on: --");
+        ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --",ChunkSpawnerLimiter.getInstance().getDescription().getVersion());
+        ChatUtil.message(sender,"&2&l-- Reasons to cull on: --");
         sendConfigurationSection(sender, CslConfig.getSpawnReasons());
-        ChatUtil.tell(sender,"&2&l-- Entity Limits: --");
+        ChatUtil.message(sender,"&2&l-- Entity Limits: --");
         sendConfigurationSection(sender, CslConfig.getEntityLimits());
     }
 
     private void sendConfigurationSection(final CommandSender sender,final @NotNull ConfigurationSection section) {
         for(Map.Entry<String,Object> entry: section.getValues(false).entrySet()) {
-            ChatUtil.tell(sender,"%s: %s",entry.getKey(),entry.getValue().toString());
+            ChatUtil.message(sender,"%s: %s",entry.getKey(),entry.getValue().toString());
         }
     }
 }
