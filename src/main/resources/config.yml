@@ -100,3 +100,5 @@ messages:
   removedEntities: "&7Removed %s %s in your chunk."
   reloadedConfig: "&cReloaded csl config."
   maxAmountBlocks: "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}."
+  maxAmountBlocksTitle: "&6Cannot place more &4{material}&6."
+  maxAmountBlocksSubtitle: "&6Max amount per chunk &2{amount}."
