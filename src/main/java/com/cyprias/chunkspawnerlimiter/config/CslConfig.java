@@ -4,6 +4,7 @@ import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CslConfig {
@@ -48,10 +49,12 @@ public class CslConfig {
 		public static boolean WATCH_CREATURE_SPAWNS = fileConfiguration.getBoolean(path + "watch-creature-spawns");
 		public static boolean WATCH_VEHICLE_CREATE = fileConfiguration.getBoolean(path + "watch-vehicle-spawns");
 		public static int CHECK_SURROUNDING_CHUNKS = fileConfiguration.getInt(path + "check-surrounding-chunks");
-		public static int INSPECTION_FREQUENCY = fileConfiguration.getInt(path + "inspection-frequency");
-		public static boolean NOTIFY_PLAYERS = fileConfiguration.getBoolean(path + "notify-players");
-		public static boolean PRESERVE_NAMED_ENTITIES = fileConfiguration.getBoolean(path + "preserve-named-entities");
+		public static int INSPECTION_FREQUENCY = fileConfiguration.getInt(path + "inspection-frequency", 300);
+		public static boolean NOTIFY_PLAYERS = fileConfiguration.getBoolean(path + "notify-players", false);
+		public static boolean PRESERVE_NAMED_ENTITIES = fileConfiguration.getBoolean(path + "preserve-named-entities", true);
 		public static List<String> IGNORE_METADATA = fileConfiguration.getStringList(path + "ignore-metadata");
+
+		public static boolean WATCH_BLOCK_PLACE = fileConfiguration.getBoolean(path + "watch-block-place", true);
 
 		private Properties() {
 			throw new UnsupportedOperationException();
@@ -62,6 +65,8 @@ public class CslConfig {
 		private static String path = "messages.";
 		public static String REMOVED_ENTITIES = fileConfiguration.getString(path + "removedEntities");
 		public static String RELOADED_CONFIG = fileConfiguration.getString(path + "reloadedConfig", "&cReloaded csl config.");
+
+		public static String MAX_AMOUNT_BLOCKS = fileConfiguration.getString(path + "maxAmountBlocks", "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}.");
 
 		private Messages() {
 			throw new UnsupportedOperationException();
