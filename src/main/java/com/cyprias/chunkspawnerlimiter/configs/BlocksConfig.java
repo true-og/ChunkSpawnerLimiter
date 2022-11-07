@@ -1,4 +1,4 @@
-package com.cyprias.chunkspawnerlimiter.config;
+package com.cyprias.chunkspawnerlimiter.configs;
 
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.Material;
@@ -17,6 +17,8 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     public BlocksConfig(final @NotNull ChunkSpawnerLimiter plugin) {
         super(plugin, "", "blocks.yml", "");
+
+        saveDefaultConfig();
 
         this.materialLimits = convertToMaterialLimits(config.getConfigurationSection("blocks").getValues(false));
 
