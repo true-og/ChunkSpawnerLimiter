@@ -2,6 +2,7 @@ package com.cyprias.chunkspawnerlimiter.configs;
 
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.Material;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -60,11 +61,11 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
             }
 
             final Integer limit = (Integer) entry.getValue();
-            if(limit == null) {
-                plugin.getLogger().warning("Missing limit value for material = "+material.name()+", skipping entry.");
+            if (limit == null) {
+                plugin.getLogger().warning("Missing limit value for material = " + material.name() + ", skipping entry.");
                 continue;
             }
-            materialIntegerEnumMap.put(material,limit);
+            materialIntegerEnumMap.put(material, limit);
         }
 
         return materialIntegerEnumMap;
@@ -82,6 +83,23 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
         return minY;
     }
 
+    @Contract(pure = true)
+    private @NotNull String getWorldPath(final String worldName) {
+        return "counts." + worldName;
+    }
+
+    public boolean hasWorld(final String worldName) {
+        return config.contains(getWorldPath(worldName));
+    }
+
+    public int getMinY(final String worldName) {
+        return config.getInt(getWorldPath(worldName) + ".min-y", getMinY());
+    }
+
+    public int getMaxY(final String worldName) {
+        return config.getInt(getWorldPath(worldName) + ".max-y", getMaxY());
+    }
+
     public int getMaxY() {
         return maxY;
     }
@@ -89,4 +107,6 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
     public boolean isEnabled() {
         return enabled;
     }
+
+
 }
