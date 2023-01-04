@@ -30,6 +30,9 @@ properties:
   # Prioritize entities without names over older entities.
   preserve-named-entities: true
 
+  # Don't remove pillagers that are part of a raid.
+  preserve-raid-entities: true
+
   # Ignore entities with any of the following metadata.
   ignore-metadata:
     - shopkeeper

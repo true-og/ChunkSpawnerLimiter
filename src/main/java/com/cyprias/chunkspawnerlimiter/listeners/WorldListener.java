@@ -8,10 +8,13 @@ import java.util.Map.Entry;
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Raid;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Raider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -102,11 +105,27 @@ public class WorldListener implements Listener {
         }
         return false;
     }
+    
+    private static boolean isPartOfRaid(Entity entity) {
+        if(!config.isPreserveRaidEntities())
+            return false;
+        
+        if(entity instanceof Raider) {
+            Raider raider = (Raider) entity;
+            for(Raid raid: raider.getWorld().getRaids()) {
+                boolean potentialMatch = raid.getRaiders().stream().anyMatch(r -> r.equals(raider));
+                if(!potentialMatch)
+                    continue;
+                return true;
+            }
+        }
+        return false;
+    }
 
     private static void removeEntities(@NotNull Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
             final Entity entity = entry.getValue().get(i);
-            if (hasMetaData(entity) || hasCustomName(entity) || (entity instanceof Player))
+            if (hasMetaData(entity) || hasCustomName(entity) || (entity instanceof Player) || isPartOfRaid(entity))
                 continue;
             entity.remove();
         }

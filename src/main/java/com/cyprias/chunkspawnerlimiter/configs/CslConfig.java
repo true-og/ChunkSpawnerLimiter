@@ -18,6 +18,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	private int inspectionFrequency;
 	private boolean notifyPlayers;
 	private boolean preserveNamedEntities;
+	private boolean preserveRaidEntities;
 	private List<String> ignoreMetadata;
 	/* Messages */
 	private String removedEntities;
@@ -49,6 +50,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 		this.inspectionFrequency = config.getInt(propertiesPath + "inspection-frequency", 300);
 		this.notifyPlayers = config.getBoolean(propertiesPath + "notify-players", false);
 		this.preserveNamedEntities = config.getBoolean(propertiesPath + "preserve-named-entities", true);
+		this.preserveRaidEntities = config.getBoolean(propertiesPath + "preserve-raid-entities", true);
 		this.ignoreMetadata = config.getStringList(propertiesPath + "ignore-metadata");
 		String messagesPath = "messages.";
 		this.removedEntities = config.getString(messagesPath + "removedEntities");
@@ -121,7 +123,11 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	public boolean isPreserveNamedEntities() {
 		return preserveNamedEntities;
 	}
-
+	
+	public boolean isPreserveRaidEntities() {
+		return preserveRaidEntities;
+	}
+	
 	public List<String> getIgnoreMetadata() {
 		return ignoreMetadata;
 	}
