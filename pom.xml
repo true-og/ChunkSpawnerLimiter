@@ -19,10 +19,10 @@
         <maven.compiler.version>3.10.1</maven.compiler.version>
         <messages.plugin.version>1.2.3</messages.plugin.version>
 
-        <spigot.api.version>1.13.2-R0.1-SNAPSHOT</spigot.api.version>
+        <spigot.api.version>1.14.4-R0.1-SNAPSHOT</spigot.api.version>
         <bstats.version>3.0.0</bstats.version>
         <acf.version>0.5.1-SNAPSHOT</acf.version>
-        <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
+        <jetbrains.annotations.version>23.1.0</jetbrains.annotations.version>
         <formatter.version>2.16.0</formatter.version>
 
     </properties>

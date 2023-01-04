@@ -2,7 +2,7 @@ name: ${project.name}
 main: ${bukkit.main.class}
 author: Cyprias
 authors: [sarhatabaot]
-api-version: "1.13"
+api-version: "1.14"
 prefix: "CSL"
 description: ${project.description}
 website: ${project.url}
