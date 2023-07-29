@@ -12,10 +12,9 @@ count:
   min-y: -64
   max-y: 256
 # You can specify specific worlds to have a different checking range.
-#  worlds:
-#    world_nether:
-#      min-y: 0
-#      max-y: 128
+  world_nether:
+    min-y: 0
+    max-y: 128
 
 
 

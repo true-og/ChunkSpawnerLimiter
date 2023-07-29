@@ -85,7 +85,7 @@ public class BlocksConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     @Contract(pure = true)
     private @NotNull String getWorldPath(final String worldName) {
-        return "counts." + worldName;
+        return "count." + worldName;
     }
 
     public boolean hasWorld(final String worldName) {
