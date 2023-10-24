@@ -20,7 +20,7 @@
         <messages.plugin.version>1.2.3</messages.plugin.version>
 
         <spigot.api.version>1.14.4-R0.1-SNAPSHOT</spigot.api.version>
-        <bstats.version>3.0.0</bstats.version>
+        <bstats.version>3.0.2</bstats.version>
         <acf.version>0.5.1-SNAPSHOT</acf.version>
         <jetbrains.annotations.version>23.1.0</jetbrains.annotations.version>
         <formatter.version>2.16.0</formatter.version>
