@@ -1,10 +1,8 @@
 package com.cyprias.chunkspawnerlimiter.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.CommandHelp;
+import co.aikar.commands.annotation.*;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import com.cyprias.chunkspawnerlimiter.messages.Command;
@@ -67,6 +65,11 @@ public class CslCommand extends BaseCommand {
         sendConfigurationSection(sender, plugin.getCslConfig().getSpawnReasons());
         ChatUtil.message(sender,"&2&l-- Entity Limits: --");
         sendConfigurationSection(sender, plugin.getCslConfig().getEntityLimits());
+    }
+
+    @HelpCommand
+    public void onHelp(final CommandHelp help) {
+        help.showHelp();
     }
 
     private void sendConfigurationSection(final CommandSender sender,final @NotNull ConfigurationSection section) {

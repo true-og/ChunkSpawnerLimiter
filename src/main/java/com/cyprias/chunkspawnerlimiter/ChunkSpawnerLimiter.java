@@ -28,6 +28,8 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 
 		registerListeners();
 		PaperCommandManager paperCommandManager = new PaperCommandManager(this);
+		paperCommandManager.enableUnstableAPI("help");
+		paperCommandManager.enableUnstableAPI("brigadier");
 		paperCommandManager.registerCommand(new CslCommand(this));
 		initMetrics();
 	}
