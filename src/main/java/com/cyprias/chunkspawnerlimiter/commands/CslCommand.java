@@ -29,6 +29,7 @@ public class CslCommand extends BaseCommand {
     @Description(Command.Reload.DESCRIPTION)
     public void onReload(final CommandSender sender){
         plugin.reloadConfigs();
+        plugin.initMetrics();
         ChatUtil.message(sender, plugin.getCslConfig().getReloadedConfig());
     }
 

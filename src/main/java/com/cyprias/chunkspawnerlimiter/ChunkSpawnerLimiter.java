@@ -19,6 +19,8 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 
 	private BlocksConfig blocksConfig;
 
+	private Metrics metrics;
+
 	@Override
 	public void onEnable() {
 		initConfigs();
@@ -27,12 +29,18 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 		registerListeners();
 		PaperCommandManager paperCommandManager = new PaperCommandManager(this);
 		paperCommandManager.registerCommand(new CslCommand(this));
-		new Metrics(this, 4195);
+		initMetrics();
 	}
 
 	@Override
 	public void onDisable() {
 		getServer().getScheduler().cancelTasks(this);
+	}
+
+	public void initMetrics() {
+		if (cslConfig.metrics() && metrics == null) {
+			this.metrics = new Metrics(this, 4195);
+		}
 	}
 
 

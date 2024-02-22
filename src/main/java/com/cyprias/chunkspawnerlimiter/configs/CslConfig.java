@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
+
+	private boolean metrics;
 	/* Properties */
 	private boolean debugMessages;
 	private boolean checkChunkLoad;
@@ -58,6 +60,11 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 		this.maxAmountBlocks = config.getString(messagesPath + "maxAmountBlocks", "&6Cannot place more &4{material}&6. Max amount per chunk &2{amount}.");
 		this.maxAmountBlocksTitle =config.getString(messagesPath + "maxAmountBlocksTitle", "&6Cannot place more &4{material}&6.");
 		this.maxAmountBlocksSubtitle = config.getString(messagesPath + "maxAmountBlocksSubtitle", "&6Max amount per chunk &2{amount}.");
+		this.metrics = config.getBoolean("metrics", true);
+	}
+
+	public boolean metrics() {
+		return metrics;
 	}
 
 	public int getEntityLimit(String entityType) {
