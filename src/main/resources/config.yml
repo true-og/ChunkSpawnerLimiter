@@ -37,6 +37,8 @@ properties:
   ignore-metadata:
     - shopkeeper
 
+  kill-instead-of-remove: false
+
 # Spawn reasons to cull on.
 spawn-reasons:
   BREEDING: true

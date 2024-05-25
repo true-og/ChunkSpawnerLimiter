@@ -22,6 +22,8 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	private boolean preserveNamedEntities;
 	private boolean preserveRaidEntities;
 	private List<String> ignoreMetadata;
+	private boolean killInsteadOfRemove;
+
 	/* Messages */
 	private String removedEntities;
 	private String reloadedConfig;
@@ -31,6 +33,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	private String maxAmountBlocksSubtitle;
 
 	private List<String> excludedWorlds;
+
 
 
 	public CslConfig(final @NotNull ChunkSpawnerLimiter plugin) {
@@ -54,6 +57,8 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 		this.preserveNamedEntities = config.getBoolean(propertiesPath + "preserve-named-entities", true);
 		this.preserveRaidEntities = config.getBoolean(propertiesPath + "preserve-raid-entities", true);
 		this.ignoreMetadata = config.getStringList(propertiesPath + "ignore-metadata");
+		this.killInsteadOfRemove = config.getBoolean(propertiesPath + "kill-instead-of-remove", false);
+
 		String messagesPath = "messages.";
 		this.removedEntities = config.getString(messagesPath + "removedEntities");
 		this.reloadedConfig = config.getString(messagesPath + "reloadedConfig", "&cReloaded csl config.");
@@ -137,6 +142,10 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	
 	public List<String> getIgnoreMetadata() {
 		return ignoreMetadata;
+	}
+
+	public boolean isKillInsteadOfRemove() {
+		return killInsteadOfRemove;
 	}
 
 	public String getRemovedEntities() {
