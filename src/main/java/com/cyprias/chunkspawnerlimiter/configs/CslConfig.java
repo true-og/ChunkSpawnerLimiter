@@ -58,7 +58,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 		this.preserveRaidEntities = config.getBoolean(propertiesPath + "preserve-raid-entities", true);
 		this.ignoreMetadata = config.getStringList(propertiesPath + "ignore-metadata");
 		this.killInsteadOfRemove = config.getBoolean(propertiesPath + "kill-instead-of-remove", false);
-		
+
 		String messagesPath = "messages.";
 		this.removedEntities = config.getString(messagesPath + "removedEntities");
 		this.reloadedConfig = config.getString(messagesPath + "reloadedConfig", "&cReloaded csl config.");
@@ -142,6 +142,10 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 	
 	public List<String> getIgnoreMetadata() {
 		return ignoreMetadata;
+	}
+
+	public boolean isKillInsteadOfRemove() {
+		return killInsteadOfRemove;
 	}
 
 	public String getRemovedEntities() {

@@ -11,10 +11,7 @@ import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Raid;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Raider;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -127,8 +124,18 @@ public class WorldListener implements Listener {
             final Entity entity = entry.getValue().get(i);
             if (hasMetaData(entity) || hasCustomName(entity) || (entity instanceof Player) || isPartOfRaid(entity))
                 continue;
-            entity.remove();
+
+            if (config.isKillInsteadOfRemove() && isKillable(entity)) {
+                ((Damageable)entity).setHealth(0.0D);
+            } else {
+                entity.remove();
+            }
+
         }
+    }
+
+    public static boolean isKillable(final Entity entity) {
+        return entity instanceof Damageable;
     }
 
     private static @NotNull HashMap<String, ArrayList<Entity>> addEntitiesByConfig(Entity @NotNull [] entities) {
