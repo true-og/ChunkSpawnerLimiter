@@ -7,8 +7,11 @@ import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import com.cyprias.chunkspawnerlimiter.messages.Command;
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -66,6 +69,20 @@ public class CslCommand extends BaseCommand {
         ChatUtil.message(sender,"&2&l-- Entity Limits: --");
         sendConfigurationSection(sender, plugin.getCslConfig().getEntityLimits());
     }
+
+    @Subcommand(Command.Search.COMMAND)
+    @CommandAlias(Command.Search.ALIAS)
+    @CommandPermission(Command.Search.PERMISSION)
+    @Description(Command.Search.DESCRIPTION)
+    public void onSearch(final CommandSender sender,@Optional final EntityType entity) {
+        if (entity != null) {
+            ChatUtil.message(sender, entity.name());
+            return;
+        }
+
+        ChatUtil.message(sender, StringUtils.join(EntityType.values(), ", "));
+    }
+
 
     @HelpCommand
     public void onHelp(final CommandHelp help) {
