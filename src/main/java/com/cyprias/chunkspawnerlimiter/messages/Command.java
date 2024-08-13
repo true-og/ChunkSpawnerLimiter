@@ -22,6 +22,12 @@ public final class Command {
             throw new UnsupportedOperationException("This operation is not supported");
         }
     }
+    public static class Search {
+        public static final String COMMAND = "search";
+        public static final String ALIAS = "cslsearch";
+        public static final String PERMISSION = "csl.search";
+        public static final String DESCRIPTION = "Shows entity search results.";
+    }
 
     public static class Info {
         public static final String COMMAND = "info";
