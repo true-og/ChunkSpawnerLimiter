@@ -23,36 +23,48 @@ public class PlaceBlockListener implements Listener {
 
     @EventHandler
     public void onPlace(@NotNull BlockPlaceEvent event) {
-        if (event.isCancelled() || !plugin.getBlocksConfig().isEnabled())
+        if (event.isCancelled() || !plugin.getBlocksConfig().isEnabled()) {
             return;
+        }
 
-        if (plugin.getCslConfig().getExcludedWorlds().contains(event.getBlock().getChunk().getWorld().getName()))
+        if (plugin.getCslConfig().getExcludedWorlds().contains(event.getBlock().getChunk().getWorld().getName())) {
             return;
+        }
 
         final Material placedType = event.getBlock().getType();
-        if (plugin.getBlocksConfig().hasLimit(placedType)) {
-            final Integer limit = plugin.getBlocksConfig().getLimit(placedType);
-            final int minY = getMinY(event.getBlock().getWorld());
-            final int maxY = getMaxY(event.getBlock().getWorld());
-            final int amountInChunk = countBlocksInChunk(event.getBlock().getChunk().getChunkSnapshot(), placedType, minY, maxY);
-            if (amountInChunk > limit) {
-                event.setCancelled(true);
-
-                if (plugin.getBlocksConfig().isNotifyMessage()) {
-                    ChatUtil.message(event.getPlayer(), plugin.getCslConfig().getMaxAmountBlocks()
-                            .replace("{material}", placedType.name())
-                            .replace("{amount}", String.valueOf(limit)));
-                }
-                if (plugin.getBlocksConfig().isNotifyTitle()) {
-                    ChatUtil.title(event.getPlayer(),
-                            plugin.getCslConfig().getMaxAmountBlocksTitle(),
-                            plugin.getCslConfig().getMaxAmountBlocksSubtitle(),
-                            placedType.name(),
-                            limit);
-                }
-            }
-            ChatUtil.debug(Debug.BLOCK_PLACE_CHECK, placedType, amountInChunk, limit);
+        if (!plugin.getBlocksConfig().hasLimit(placedType)) {
+            return;
         }
+
+
+        final Integer limit = plugin.getBlocksConfig().getLimit(placedType);
+        final int minY = getMinY(event.getBlock().getWorld());
+        final int maxY = getMaxY(event.getBlock().getWorld());
+        event.setCancelled(true);
+        final int amountInChunk = countBlocksInChunk(event.getBlock().getChunk().getChunkSnapshot(), placedType, minY, maxY);
+
+        if (amountInChunk <= limit) {
+            event.setCancelled(false);
+            ChatUtil.debug(Debug.BLOCK_PLACE_CHECK, placedType, amountInChunk, limit);
+            return;
+        }
+
+        if (plugin.getBlocksConfig().isNotifyMessage()) {
+            ChatUtil.message(event.getPlayer(), plugin.getCslConfig().getMaxAmountBlocks()
+                    .replace("{material}", placedType.name())
+                    .replace("{amount}", String.valueOf(limit)));
+        }
+        if (plugin.getBlocksConfig().isNotifyTitle()) {
+            ChatUtil.title(
+                    event.getPlayer(),
+                    plugin.getCslConfig().getMaxAmountBlocksTitle(),
+                    plugin.getCslConfig().getMaxAmountBlocksSubtitle(),
+                    placedType.name(),
+                    limit
+            );
+        }
+        ChatUtil.debug(Debug.BLOCK_PLACE_CHECK, placedType, amountInChunk, limit);
+
     }
 
     private int getMinY(final @NotNull World world) {
@@ -82,8 +94,9 @@ public class PlaceBlockListener implements Listener {
         for (int x = 0; x < 16; x++) {
             for (int y = minY; y < maxY; y++) {
                 for (int z = 0; z < 16; z++) {
-                    if (chunkSnapshot.getBlockType(x, y, z) == material)
+                    if (chunkSnapshot.getBlockType(x, y, z) == material) {
                         count++;
+                    }
                 }
             }
         }
