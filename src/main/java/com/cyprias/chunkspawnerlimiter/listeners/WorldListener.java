@@ -35,6 +35,10 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
+        if (config.isWorldNotAllowed(event.getWorld().getName())) {
+            return;
+        }
+        
         ChatUtil.debug(Debug.CHUNK_LOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
         if (plugin.getCslConfig().isActiveInspections()) {
             InspectTask inspectTask = new InspectTask(event.getChunk());
@@ -50,6 +54,10 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onChunkUnloadEvent(@NotNull ChunkUnloadEvent event) {
+        if (config.isWorldNotAllowed(event.getWorld().getName())) {
+            return;
+        }
+
         ChatUtil.debug(Debug.CHUNK_UNLOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
 
         if (chunkTasks.containsKey(event.getChunk())) {
@@ -67,7 +75,7 @@ public class WorldListener implements Listener {
      * @param chunk Chunk
      */
     public static void checkChunk(@NotNull Chunk chunk) {
-        if (config.getExcludedWorlds().contains(chunk.getWorld().getName())) {
+        if (config.isWorldNotAllowed(chunk.getWorld().getName())) {
             return;
         }
 

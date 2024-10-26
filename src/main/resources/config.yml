@@ -98,8 +98,11 @@ entities:
 #  HORSE: 10
 #  WITCH: 10
 
-# Exclude these worlds from limits.  
-excluded-worlds: []
+# Exclude these worlds from limits.
+worlds:
+  # Can be "excluded" or "included"
+  mode: excluded
+  worlds: []
 
 messages:
   removedEntities: "&7Removed %s %s in your chunk."

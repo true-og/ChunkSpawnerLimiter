@@ -52,7 +52,8 @@ public class CslCommand extends BaseCommand {
         ChatUtil.message(sender,"Notify Players: %s",plugin.getCslConfig().isNotifyPlayers());
         ChatUtil.message(sender,"Preserve Named Entities: %s", plugin.getCslConfig().isPreserveNamedEntities());
         ChatUtil.message(sender,"Ignore Metadata: %s", plugin.getCslConfig().getIgnoreMetadata().toString());
-        ChatUtil.message(sender,"Excluded Worlds: %s", plugin.getCslConfig().getExcludedWorlds());
+        ChatUtil.message(sender, "Worlds Mode: %s",plugin.getCslConfig().getWorldsMode().name());
+        ChatUtil.message(sender,"Worlds: %s", plugin.getCslConfig().getWorldNames());
         ChatUtil.message(sender,"&2&l-- Messages --");
         ChatUtil.message(sender,"Reloaded Config: %s", plugin.getCslConfig().getReloadedConfig());
         ChatUtil.message(sender,"Removed Entities: %s", plugin.getCslConfig().getRemovedEntities());

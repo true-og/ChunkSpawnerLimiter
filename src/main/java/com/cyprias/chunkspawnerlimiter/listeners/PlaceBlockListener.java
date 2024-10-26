@@ -27,7 +27,7 @@ public class PlaceBlockListener implements Listener {
             return;
         }
 
-        if (plugin.getCslConfig().getExcludedWorlds().contains(event.getBlock().getChunk().getWorld().getName())) {
+        if (plugin.getCslConfig().isWorldNotAllowed(event.getBlock().getChunk().getWorld().getName())) {
             return;
         }
 

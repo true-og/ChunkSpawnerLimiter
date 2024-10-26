@@ -4,6 +4,7 @@ import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
@@ -92,6 +93,33 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 		return config.getConfigurationSection("entities");
 	}
 
+	public boolean isWorldAllowed(final String worldName) {
+		final List<String> worldNames = getWorldNames();
+		if (getWorldsMode() == WorldsMode.EXCLUDED) {
+			return !worldNames.contains(worldName);
+		}
+		// INCLUDED
+		return worldNames.contains(worldName);
+	}
+
+	public boolean isWorldNotAllowed(final String worldName) {
+		return !isWorldAllowed(worldName);
+	}
+
+	public List<String> getWorldNames() {
+		return config.getStringList("worlds.worlds");
+	}
+
+	public WorldsMode getWorldsMode() {
+		final String mode = config.getString("worlds.mode", "excluded");
+		if (mode == null) {
+			return WorldsMode.EXCLUDED;
+		}
+
+		return WorldsMode.valueOf(mode.toUpperCase());
+	}
+
+	@Deprecated
 	public List<String> getExcludedWorlds() {
 		return excludedWorlds;
 	}
@@ -166,5 +194,10 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter>{
 
 	public String getMaxAmountBlocksSubtitle() {
 		return maxAmountBlocksSubtitle;
+	}
+
+	public enum WorldsMode {
+		INCLUDED,
+		EXCLUDED
 	}
 }
