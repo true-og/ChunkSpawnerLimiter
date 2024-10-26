@@ -67,7 +67,7 @@ public class WorldListener implements Listener {
      * @param chunk Chunk
      */
     public static void checkChunk(@NotNull Chunk chunk) {
-        if (config.getExcludedWorlds().contains(chunk.getWorld().getName())) {
+        if (config.isWorldNotAllowed(chunk.getWorld().getName())) {
             return;
         }
 
