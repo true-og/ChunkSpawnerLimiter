@@ -100,8 +100,8 @@ entities:
 
 # Exclude these worlds from limits.
 worlds:
-  # Can be "exclude" or "include"
-  mode: exclude
+  # Can be "excluded" or "included"
+  mode: excluded
   worlds: []
 
 messages:
