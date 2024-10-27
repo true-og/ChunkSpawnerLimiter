@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Raid;
 import org.bukkit.entity.*;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class WorldListener implements Listener {
     private final ChunkSpawnerLimiter plugin;
     private static CslConfig config;
-    private final Map<Chunk, Integer> chunkTasks = new HashMap<>();
+    private final Map<Chunk, Integer> chunkTasks = new WeakHashMap<>(); //suspect mem leak
 
     public WorldListener(final ChunkSpawnerLimiter plugin) {
         this.plugin = plugin;
@@ -35,11 +35,7 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
-        if (config.isWorldNotAllowed(event.getWorld().getName())) {
-            return;
-        }
-        
-        ChatUtil.debug(Debug.CHUNK_LOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
+        ChatUtil.debug(Debug.CHUNK_LOAD_EVENT, event.getChunk().getX(), event.getChunk().getZ());
         if (plugin.getCslConfig().isActiveInspections()) {
             InspectTask inspectTask = new InspectTask(event.getChunk());
             long delay = plugin.getCslConfig().getInspectionFrequency() * 20L;
@@ -48,25 +44,23 @@ public class WorldListener implements Listener {
             chunkTasks.put(event.getChunk(), task.getTaskId());
         }
 
-        if (plugin.getCslConfig().isCheckChunkLoad())
+        if (plugin.getCslConfig().isCheckChunkLoad()) {
             checkChunk(event.getChunk());
+        }
     }
 
     @EventHandler
     public void onChunkUnloadEvent(@NotNull ChunkUnloadEvent event) {
-        if (config.isWorldNotAllowed(event.getWorld().getName())) {
-            return;
-        }
-
-        ChatUtil.debug(Debug.CHUNK_UNLOAD_EVENT,event.getChunk().getX(),event.getChunk().getZ());
+        ChatUtil.debug(Debug.CHUNK_UNLOAD_EVENT, event.getChunk().getX(), event.getChunk().getZ());
 
         if (chunkTasks.containsKey(event.getChunk())) {
             plugin.getServer().getScheduler().cancelTask(chunkTasks.get(event.getChunk()));
             chunkTasks.remove(event.getChunk());
         }
 
-        if (plugin.getCslConfig().isCheckChunkUnload())
+        if (plugin.getCslConfig().isCheckChunkUnload()) {
             checkChunk(event.getChunk());
+        }
     }
 
     /**
@@ -87,7 +81,7 @@ public class WorldListener implements Listener {
             int limit = config.getEntityLimit(entityType);
 
             if (entry.getValue().size() > limit) {
-                ChatUtil.debug(Debug.REMOVING_ENTITY_AT,entry.getValue().size() - limit,entityType,chunk.getX(),chunk.getZ());
+                ChatUtil.debug(Debug.REMOVING_ENTITY_AT, entry.getValue().size() - limit, entityType, chunk.getX(), chunk.getZ());
                 if (config.isNotifyPlayers()) {
                     notifyPlayers(entry, entities, limit, entityType);
                 }
@@ -97,8 +91,9 @@ public class WorldListener implements Listener {
     }
 
     private static boolean hasCustomName(Entity entity) {
-        if (config.isPreserveNamedEntities())
-            return entity.getCustomName()!=null;
+        if (config.isPreserveNamedEntities()) {
+            return entity.getCustomName() != null;
+        }
         return false;
     }
 
@@ -110,17 +105,19 @@ public class WorldListener implements Listener {
         }
         return false;
     }
-    
+
     private static boolean isPartOfRaid(Entity entity) {
-        if(!config.isPreserveRaidEntities())
+        if (!config.isPreserveRaidEntities()) {
             return false;
-        
-        if(entity instanceof Raider) {
+        }
+
+        if (entity instanceof Raider) {
             Raider raider = (Raider) entity;
-            for(Raid raid: raider.getWorld().getRaids()) {
+            for (Raid raid : raider.getWorld().getRaids()) {
                 boolean potentialMatch = raid.getRaiders().stream().anyMatch(r -> r.equals(raider));
-                if(!potentialMatch)
+                if (!potentialMatch) {
                     continue;
+                }
                 return true;
             }
         }
@@ -130,11 +127,12 @@ public class WorldListener implements Listener {
     private static void removeEntities(@NotNull Entry<String, ArrayList<Entity>> entry, int limit) {
         for (int i = entry.getValue().size() - 1; i >= limit; i--) {
             final Entity entity = entry.getValue().get(i);
-            if (hasMetaData(entity) || hasCustomName(entity) || (entity instanceof Player) || isPartOfRaid(entity))
+            if (hasMetaData(entity) || hasCustomName(entity) || (entity instanceof Player) || isPartOfRaid(entity)) {
                 continue;
+            }
 
             if (config.isKillInsteadOfRemove() && isKillable(entity)) {
-                ((Damageable)entity).setHealth(0.0D);
+                ((Damageable) entity).setHealth(0.0D);
             } else {
                 entity.remove();
             }
@@ -155,12 +153,12 @@ public class WorldListener implements Listener {
             String entityMobGroup = MobGroupCompare.getMobGroup(entities[i]);
 
             if (config.contains("entities." + entityType)) {
-                modifiedTypes.putIfAbsent(entityType,new ArrayList<>());
+                modifiedTypes.putIfAbsent(entityType, new ArrayList<>());
                 modifiedTypes.get(entityType).add(entities[i]);
             }
 
             if (config.contains("entities." + entityMobGroup)) {
-                modifiedTypes.putIfAbsent(entityMobGroup,new ArrayList<>());
+                modifiedTypes.putIfAbsent(entityMobGroup, new ArrayList<>());
                 modifiedTypes.get(entityMobGroup).add(entities[i]);
             }
         }

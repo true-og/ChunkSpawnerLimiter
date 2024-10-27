@@ -1,11 +1,12 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import java.util.*
 
 plugins {
     java
     alias(libs.plugins.shadow)
     alias(libs.plugins.plugin.yml)
 }
-version = "4.3.7"
+version = "4.3.8"
 description = "Limit entities in chunks."
 
 
