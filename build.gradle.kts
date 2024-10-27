@@ -1,5 +1,4 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
-import java.util.*
 
 plugins {
     java
