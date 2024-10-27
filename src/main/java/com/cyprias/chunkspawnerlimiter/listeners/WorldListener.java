@@ -115,10 +115,9 @@ public class WorldListener implements Listener {
             Raider raider = (Raider) entity;
             for (Raid raid : raider.getWorld().getRaids()) {
                 boolean potentialMatch = raid.getRaiders().stream().anyMatch(r -> r.equals(raider));
-                if (!potentialMatch) {
-                    continue;
+                if (potentialMatch) {
+                    return true;
                 }
-                return true;
             }
         }
         return false;
