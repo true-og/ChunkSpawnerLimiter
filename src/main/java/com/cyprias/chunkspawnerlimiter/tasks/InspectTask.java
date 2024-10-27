@@ -13,14 +13,14 @@ import java.lang.ref.WeakReference;
 import static com.cyprias.chunkspawnerlimiter.listeners.WorldListener.checkChunk;
 
 public class InspectTask extends BukkitRunnable {
-    private final WeakReference<Chunk> refChunk; //suspect memory leak
+    private final WeakReference<Chunk> refChunk; //todo suspect memory leak
     private int id;
 
     @Override
     public void run() {
         final Chunk chunk = this.refChunk.get();
         if (chunk == null) {
-            Bukkit.getLogger().warning("Chunk is null!");
+            Bukkit.getLogger().fine("Chunk is null! Ignoring");
             return;
         }
 

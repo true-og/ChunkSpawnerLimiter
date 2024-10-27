@@ -47,11 +47,13 @@ public abstract class ConfigFile<T extends JavaPlugin> {
     }
 
     public void saveConfig() {
-        if (this.config == null)
+        if (this.config == null) {
             return;
+        }
 
-        if (file == null)
+        if (file == null) {
             return;
+        }
 
         try {
             config.save(file);
@@ -85,7 +87,7 @@ public abstract class ConfigFile<T extends JavaPlugin> {
                     }
                 }
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE,e.getMessage(),e);
+                plugin.getLogger().log(Level.SEVERE, e.getMessage(), e);
             }
         }
     }
