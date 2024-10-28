@@ -42,8 +42,10 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onVehicleCreateEvent(@NotNull VehicleCreateEvent event) {
-        if (event.isCancelled() || !config.isWatchVehicleCreate())
+        if (event.isCancelled() || !config.isWatchVehicleCreate()) {
+            ChatUtil.debug("Vehicle Create Event, Config=%b, Event=%b", config.isWatchVehicleCreate(), event.isCancelled()); //todo temp
             return;
+        }
 
         Chunk chunk = event.getVehicle().getLocation().getChunk();
 
