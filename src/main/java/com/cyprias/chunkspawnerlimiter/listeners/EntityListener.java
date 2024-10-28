@@ -46,6 +46,8 @@ public class EntityListener implements Listener {
             return;
 
         Chunk chunk = event.getVehicle().getLocation().getChunk();
+
+        ChatUtil.debug(Debug.VEHICLE_CREATE_EVENT, chunk.getX(), chunk.getZ());
         WorldListener.checkChunk(chunk);
         checkSurroundings(chunk);
     }
