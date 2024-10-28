@@ -23,6 +23,8 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
     private boolean preserveRaidEntities;
     private List<String> ignoreMetadata;
     private boolean killInsteadOfRemove;
+    private boolean dropItemsFromArmorStands;
+    private boolean logArmorStandTickWarning;
 
     /* Messages */
     private String removedEntities;
@@ -39,7 +41,6 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     @Override
     public void initValues() {
-        String propertiesPath = "properties.";
         final ConfigurationSection propertiesSection = config.getConfigurationSection("properties");
 
         if (propertiesSection == null) {
@@ -57,8 +58,10 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
         this.notifyPlayers = propertiesSection.getBoolean( "notify-players", false);
         this.preserveNamedEntities = propertiesSection.getBoolean( "preserve-named-entities", true);
         this.preserveRaidEntities = propertiesSection.getBoolean( "preserve-raid-entities", true);
-        this.ignoreMetadata = propertiesSection.getStringList(propertiesPath + "ignore-metadata");
+        this.ignoreMetadata = propertiesSection.getStringList("ignore-metadata");
         this.killInsteadOfRemove = propertiesSection.getBoolean( "kill-instead-of-remove", false);
+        this.dropItemsFromArmorStands = propertiesSection.getBoolean("drop-items-from-armor-stands", false);
+        this.logArmorStandTickWarning = propertiesSection.getBoolean("log-armor-stand-tick-warning", true);
 
         String messagesPath = "messages.";
         this.removedEntities = config.getString(messagesPath + "removedEntities");
@@ -190,6 +193,14 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     public String getMaxAmountBlocksSubtitle() {
         return maxAmountBlocksSubtitle;
+    }
+
+    public boolean isDropItemsFromArmorStands() {
+        return dropItemsFromArmorStands;
+    }
+
+    public boolean isLogArmorStandTickWarning() {
+        return logArmorStandTickWarning;
     }
 
     public enum WorldsMode {

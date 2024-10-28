@@ -6,12 +6,17 @@ import co.aikar.commands.annotation.*;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.messages.Command;
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
+import com.cyprias.chunkspawnerlimiter.utils.Util;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
 @CommandAlias("csl")
@@ -63,6 +68,7 @@ public class CslCommand extends BaseCommand {
     @Description(Command.Info.DESCRIPTION)
     public void onInfo(final CommandSender sender) {
         ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --",plugin.getDescription().getVersion());
+        ChatUtil.message(sender,"&2&l-- Paper? %b, Armor Tick? %b",Util.isPaperServer(), Util.isArmorStandTickDisabled());
         ChatUtil.message(sender,"&2&l-- Reasons to cull on: --");
         sendConfigurationSection(sender, plugin.getCslConfig().getSpawnReasons());
         ChatUtil.message(sender,"&2&l-- Entity Limits: --");
@@ -80,6 +86,23 @@ public class CslCommand extends BaseCommand {
         }
 
         ChatUtil.message(sender, StringUtils.join(EntityType.values(), ", "));
+    }
+
+    @Private
+    @Subcommand("check")
+    @CommandPermission("csl.check")
+    @Description("Debug command for checking the amount & limit of an entity in the current chunk")
+    public void onCheck(final @NotNull Player player, final @NotNull EntityType entityType) {
+        final int limit = plugin.getCslConfig().getEntityLimit(entityType.name());
+        int size = 0;
+        final Chunk chunk = player.getLocation().getWorld().getChunkAt(player.getLocation());
+        for (final Entity entity: chunk.getEntities()) {
+            if (entity.getType() == entityType) {
+                size++;
+            }
+        }
+
+        ChatUtil.message(player,"EntityType %s Limit: %d, Size: %d", entityType.name(), limit, size );
     }
 
 

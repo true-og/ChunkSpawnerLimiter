@@ -1,5 +1,6 @@
 package com.cyprias.chunkspawnerlimiter.listeners;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +10,12 @@ import java.util.WeakHashMap;
 import com.cyprias.chunkspawnerlimiter.utils.ChatUtil;
 import com.cyprias.chunkspawnerlimiter.messages.Debug;
 import com.cyprias.chunkspawnerlimiter.tasks.InspectTask;
+import com.cyprias.chunkspawnerlimiter.utils.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Raid;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +25,8 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
 import com.cyprias.chunkspawnerlimiter.ChunkSpawnerLimiter;
 import com.cyprias.chunkspawnerlimiter.compare.MobGroupCompare;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
@@ -130,17 +137,33 @@ public class WorldListener implements Listener {
                 continue;
             }
 
-            if (config.isKillInsteadOfRemove() && isKillable(entity)) {
-                if (config.isDropItemsFromArmorStands()) {
-
-                }
-                ((Damageable) entity).setHealth(0.0D);
-            } else {
+            if (!config.isKillInsteadOfRemove() || !isKillable(entity)) {
                 entity.remove();
+                return;
             }
 
+
+            if (config.isDropItemsFromArmorStands() && entity instanceof ArmorStand) {
+                EntityEquipment entityEquipment = ((ArmorStand) entity).getEquipment();
+                if (entityEquipment == null || entityEquipment.getArmorContents() == null) {
+                    return;
+                }
+
+                for (ItemStack itemStack : entityEquipment.getArmorContents()) {
+                    entity.getWorld().dropItemNaturally(entity.getLocation(), itemStack);
+                }
+            }
+
+            if (Util.isArmorStandTickDisabled()) {
+                ChatUtil.logArmorStandTickWarning();
+                entity.remove();
+                return;
+            }
+
+            ((Damageable) entity).setHealth(0.0D);
         }
     }
+
 
     public static boolean isKillable(final Entity entity) {
         return entity instanceof Damageable;

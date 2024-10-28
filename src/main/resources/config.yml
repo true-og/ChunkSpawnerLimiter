@@ -39,6 +39,12 @@ properties:
 
   kill-instead-of-remove: false
 
+  # Only relevant if kill-instead-of-remove is used (unless paper's tick setting is set to false)
+  # Drops the items from the armor stands, i.e. helmet, etc
+  drop-items-from-armor-stands: false
+
+  log-armor-stand-tick-warning: true
+
 # Spawn reasons to cull on.
 spawn-reasons:
   BREEDING: true

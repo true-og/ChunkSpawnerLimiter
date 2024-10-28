@@ -25,6 +25,7 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 	public void onEnable() {
 		initConfigs();
 		ChatUtil.init(this);
+		ChatUtil.logAndCheckArmorStandTickWarning();
 
 		registerListeners();
 		PaperCommandManager paperCommandManager = new PaperCommandManager(this);
@@ -54,6 +55,8 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 	public void reloadConfigs() {
 		this.cslConfig.reloadConfig();
 		this.blocksConfig.reloadConfig();
+
+		ChatUtil.logAndCheckArmorStandTickWarning();
 	}
 
 	private void registerListeners() {
@@ -75,4 +78,6 @@ public class ChunkSpawnerLimiter extends JavaPlugin {
 	public CslConfig getCslConfig() {
 		return cslConfig;
 	}
+
+
 }
