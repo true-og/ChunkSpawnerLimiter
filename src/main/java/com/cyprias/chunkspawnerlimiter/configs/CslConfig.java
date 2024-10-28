@@ -31,7 +31,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
     private String maxAmountBlocks;
     private String maxAmountBlocksTitle;
     private String maxAmountBlocksSubtitle;
-    
+
     public CslConfig(final @NotNull ChunkSpawnerLimiter plugin) {
         super(plugin, "", "config.yml", "");
         saveDefaultConfig();

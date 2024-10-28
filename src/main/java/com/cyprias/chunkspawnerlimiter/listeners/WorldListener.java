@@ -35,8 +35,8 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
-        ChatUtil.debug(Debug.CHUNK_LOAD_EVENT, event.getChunk().getX(), event.getChunk().getZ());
         if (plugin.getCslConfig().isActiveInspections()) {
+            ChatUtil.debug(Debug.CREATE_ACTIVE_CHECK,event.getChunk().getX(), event.getChunk().getZ());
             InspectTask inspectTask = new InspectTask(event.getChunk());
             long delay = plugin.getCslConfig().getInspectionFrequency() * 20L;
             BukkitTask task = inspectTask.runTaskTimer(plugin, delay, delay);
@@ -45,20 +45,20 @@ public class WorldListener implements Listener {
         }
 
         if (plugin.getCslConfig().isCheckChunkLoad()) {
+            ChatUtil.debug(Debug.CHUNK_LOAD_EVENT, event.getChunk().getX(), event.getChunk().getZ());
             checkChunk(event.getChunk());
         }
     }
 
     @EventHandler
     public void onChunkUnloadEvent(@NotNull ChunkUnloadEvent event) {
-        ChatUtil.debug(Debug.CHUNK_UNLOAD_EVENT, event.getChunk().getX(), event.getChunk().getZ());
-
         if (chunkTasks.containsKey(event.getChunk())) {
             plugin.getServer().getScheduler().cancelTask(chunkTasks.get(event.getChunk()));
             chunkTasks.remove(event.getChunk());
         }
 
         if (plugin.getCslConfig().isCheckChunkUnload()) {
+            ChatUtil.debug(Debug.CHUNK_UNLOAD_EVENT, event.getChunk().getX(), event.getChunk().getZ());
             checkChunk(event.getChunk());
         }
     }
