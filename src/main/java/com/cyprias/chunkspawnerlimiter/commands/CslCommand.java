@@ -90,6 +90,7 @@ public class CslCommand extends BaseCommand {
 
     @Private
     @Subcommand("check")
+    @CommandAlias("cslcheck")
     @CommandPermission("csl.check")
     @Description("Debug command for checking the amount & limit of an entity in the current chunk")
     public void onCheck(final @NotNull Player player, final @NotNull EntityType entityType) {
