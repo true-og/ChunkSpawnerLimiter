@@ -16,6 +16,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
     private boolean activeInspections;
     private boolean watchCreatureSpawns;
     private boolean watchVehicleCreate;
+    private boolean watchEntitySpawns;
     private int checkSurroundingChunks;
     private int inspectionFrequency;
     private boolean notifyPlayers;
@@ -53,6 +54,7 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
         this.activeInspections = propertiesSection.getBoolean( "active-inspections", true);
         this.watchCreatureSpawns = propertiesSection.getBoolean( "watch-creature-spawns", true);
         this.watchVehicleCreate = propertiesSection.getBoolean( "watch-vehicle-create-event", true);
+        this.watchEntitySpawns = propertiesSection.getBoolean( "watch-entity-spawns", true);
         this.checkSurroundingChunks = propertiesSection.getInt("check-surrounding-chunks", 1);
         this.inspectionFrequency = propertiesSection.getInt("inspection-frequency", 300);
         this.notifyPlayers = propertiesSection.getBoolean( "notify-players", false);
@@ -201,6 +203,10 @@ public class CslConfig extends ConfigFile<ChunkSpawnerLimiter> {
 
     public boolean isLogArmorStandTickWarning() {
         return logArmorStandTickWarning;
+    }
+
+    public boolean isWatchEntitySpawns() {
+        return watchEntitySpawns;
     }
 
     public enum WorldsMode {

@@ -18,6 +18,9 @@ properties:
   # Check a chunk when a vehicle spawns (VehicleCreateEvent).
   watch-vehicle-create-event: true
 
+  # Check a chunk when an entity spawns (ArmorStand)
+  watch-entity-spawns: true
+
   # Radius of surrounding chunks to check.
   check-surrounding-chunks: 1
 

@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import com.cyprias.chunkspawnerlimiter.configs.CslConfig;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,13 +44,25 @@ public class EntityListener implements Listener {
     @EventHandler
     public void onVehicleCreateEvent(@NotNull VehicleCreateEvent event) {
         if (event.isCancelled() || !config.isWatchVehicleCreate()) {
-            ChatUtil.debug("Vehicle Create Event, Config=%b, Event=%b", config.isWatchVehicleCreate(), event.isCancelled()); //todo temp
             return;
         }
 
         Chunk chunk = event.getVehicle().getLocation().getChunk();
 
         ChatUtil.debug(Debug.VEHICLE_CREATE_EVENT, chunk.getX(), chunk.getZ());
+        WorldListener.checkChunk(chunk);
+        checkSurroundings(chunk);
+    }
+
+    @EventHandler
+    public void onEntitySpawnEvent(@NotNull EntitySpawnEvent event) {
+        if (event.isCancelled() || event instanceof CreatureSpawnEvent || !config.isWatchEntitySpawns()) {
+            return;
+        }
+
+        Chunk chunk = event.getEntity().getLocation().getChunk();
+
+        ChatUtil.debug("Entity Spawn Event: %d, %dx, %dz ", event.getEntity().getType().name(),chunk.getX(), chunk.getZ());
         WorldListener.checkChunk(chunk);
         checkSurroundings(chunk);
     }
