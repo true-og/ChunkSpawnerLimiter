@@ -36,7 +36,7 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onChunkLoadEvent(@NotNull ChunkLoadEvent event) {
         if (plugin.getCslConfig().isActiveInspections()) {
-            ChatUtil.debug(Debug.CREATE_ACTIVE_CHECK,event.getChunk().getX(), event.getChunk().getZ());
+            //ChatUtil.debug(Debug.CREATE_ACTIVE_CHECK,event.getChunk().getX(), event.getChunk().getZ());
             InspectTask inspectTask = new InspectTask(event.getChunk());
             long delay = plugin.getCslConfig().getInspectionFrequency() * 20L;
             BukkitTask task = inspectTask.runTaskTimer(plugin, delay, delay);
@@ -70,16 +70,16 @@ public class WorldListener implements Listener {
      */
     public static void checkChunk(@NotNull Chunk chunk) {
         if (config.isWorldNotAllowed(chunk.getWorld().getName())) {
+            ChatUtil.debug("World %s is not allowed", chunk.getWorld().getName());
             return;
         }
 
         Entity[] entities = chunk.getEntities();
         HashMap<String, ArrayList<Entity>> types = addEntitiesByConfig(entities);
-
         for (Entry<String, ArrayList<Entity>> entry : types.entrySet()) {
             String entityType = entry.getKey();
             int limit = config.getEntityLimit(entityType);
-
+            ChatUtil.debug("Checking entity limit for %s: limit:%d size:%d", entityType, limit, entry.getValue().size());
             if (entry.getValue().size() > limit) {
                 ChatUtil.debug(Debug.REMOVING_ENTITY_AT, entry.getValue().size() - limit, entityType, chunk.getX(), chunk.getZ());
                 if (config.isNotifyPlayers()) {
@@ -131,6 +131,9 @@ public class WorldListener implements Listener {
             }
 
             if (config.isKillInsteadOfRemove() && isKillable(entity)) {
+                if (config.isDropItemsFromArmorStands()) {
+
+                }
                 ((Damageable) entity).setHealth(0.0D);
             } else {
                 entity.remove();
