@@ -25,8 +25,9 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onCreatureSpawnEvent(@NotNull CreatureSpawnEvent event) {
-        if (event.isCancelled() || !config.isWatchCreatureSpawns())
+        if (event.isCancelled() || !config.isWatchCreatureSpawns()) {
             return;
+        }
 
         final String reason = event.getSpawnReason().toString();
 
@@ -62,7 +63,7 @@ public class EntityListener implements Listener {
 
         Chunk chunk = event.getEntity().getLocation().getChunk();
 
-        ChatUtil.debug("Entity Spawn Event: %d, %dx, %dz ", event.getEntity().getType().name(),chunk.getX(), chunk.getZ());
+        ChatUtil.debug("Entity Spawn Event: %s, %dx, %dz ", event.getEntity().getType().name(), chunk.getX(), chunk.getZ());
         WorldListener.checkChunk(chunk);
         checkSurroundings(chunk);
     }
