@@ -31,7 +31,7 @@ public class CslCommand extends BaseCommand {
     @CommandAlias(Command.Reload.ALIAS)
     @CommandPermission(Command.Reload.PERMISSION)
     @Description(Command.Reload.DESCRIPTION)
-    public void onReload(final CommandSender sender){
+    public void onReload(final CommandSender sender) {
         plugin.reloadConfigs();
         plugin.initMetrics();
         ChatUtil.message(sender, plugin.getCslConfig().getReloadedConfig());
@@ -43,23 +43,23 @@ public class CslCommand extends BaseCommand {
     @CommandPermission(Command.Settings.PERMISSION)
     @Description(Command.Settings.DESCRIPTION)
     public void onSettings(final CommandSender sender) {
-        ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --",plugin.getDescription().getVersion());
-        ChatUtil.message(sender,"&2&l-- Properties --");
-        ChatUtil.message(sender,"Debug Message: %s", plugin.getCslConfig().isDebugMessages());
-        ChatUtil.message(sender,"Check Chunk Load: %s", plugin.getCslConfig().isCheckChunkLoad());
-        ChatUtil.message(sender,"Check Chunk Unload: %s", plugin.getCslConfig().isCheckChunkUnload());
-        ChatUtil.message(sender,"Active Inspection: %s", plugin.getCslConfig().isActiveInspections());
-        ChatUtil.message(sender,"Watch Creature Spawns: %s", plugin.getCslConfig().isWatchCreatureSpawns());
-        ChatUtil.message(sender,"Check Surrounding Chunks: %s", plugin.getCslConfig().getCheckSurroundingChunks());
-        ChatUtil.message(sender,"Inspection Frequency: %d", plugin.getCslConfig().getInspectionFrequency());
-        ChatUtil.message(sender,"Notify Players: %s",plugin.getCslConfig().isNotifyPlayers());
-        ChatUtil.message(sender,"Preserve Named Entities: %s", plugin.getCslConfig().isPreserveNamedEntities());
-        ChatUtil.message(sender,"Ignore Metadata: %s", plugin.getCslConfig().getIgnoreMetadata().toString());
-        ChatUtil.message(sender, "Worlds Mode: %s",plugin.getCslConfig().getWorldsMode().name());
-        ChatUtil.message(sender,"Worlds: %s", plugin.getCslConfig().getWorldNames());
-        ChatUtil.message(sender,"&2&l-- Messages --");
-        ChatUtil.message(sender,"Reloaded Config: %s", plugin.getCslConfig().getReloadedConfig());
-        ChatUtil.message(sender,"Removed Entities: %s", plugin.getCslConfig().getRemovedEntities());
+        ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --", plugin.getDescription().getVersion());
+        ChatUtil.message(sender, "&2&l-- Properties --");
+        ChatUtil.message(sender, "Debug Message: %s", plugin.getCslConfig().isDebugMessages());
+        ChatUtil.message(sender, "Check Chunk Load: %s", plugin.getCslConfig().isCheckChunkLoad());
+        ChatUtil.message(sender, "Check Chunk Unload: %s", plugin.getCslConfig().isCheckChunkUnload());
+        ChatUtil.message(sender, "Active Inspection: %s", plugin.getCslConfig().isActiveInspections());
+        ChatUtil.message(sender, "Watch Creature Spawns: %s", plugin.getCslConfig().isWatchCreatureSpawns());
+        ChatUtil.message(sender, "Check Surrounding Chunks: %s", plugin.getCslConfig().getCheckSurroundingChunks());
+        ChatUtil.message(sender, "Inspection Frequency: %d", plugin.getCslConfig().getInspectionFrequency());
+        ChatUtil.message(sender, "Notify Players: %s", plugin.getCslConfig().isNotifyPlayers());
+        ChatUtil.message(sender, "Preserve Named Entities: %s", plugin.getCslConfig().isPreserveNamedEntities());
+        ChatUtil.message(sender, "Ignore Metadata: %s", plugin.getCslConfig().getIgnoreMetadata().toString());
+        ChatUtil.message(sender, "Worlds Mode: %s", plugin.getCslConfig().getWorldsMode().name());
+        ChatUtil.message(sender, "Worlds: %s", plugin.getCslConfig().getWorldNames());
+        ChatUtil.message(sender, "&2&l-- Messages --");
+        ChatUtil.message(sender, "Reloaded Config: %s", plugin.getCslConfig().getReloadedConfig());
+        ChatUtil.message(sender, "Removed Entities: %s", plugin.getCslConfig().getRemovedEntities());
     }
 
     @Subcommand(Command.Info.COMMAND)
@@ -67,11 +67,11 @@ public class CslCommand extends BaseCommand {
     @CommandPermission(Command.Info.PERMISSION)
     @Description(Command.Info.DESCRIPTION)
     public void onInfo(final CommandSender sender) {
-        ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --",plugin.getDescription().getVersion());
-        ChatUtil.message(sender,"&2&l-- Paper? %b, Armor Tick? %b",Util.isPaperServer(), Util.isArmorStandTickDisabled());
-        ChatUtil.message(sender,"&2&l-- Reasons to cull on: --");
+        ChatUtil.message(sender, "&2&l-- ChunkSpawnerLimiter v%s --", plugin.getDescription().getVersion());
+        ChatUtil.message(sender, "&2&l-- Paper? %b, Armor Tick? %b", Util.isPaperServer(), Util.isArmorStandTickDisabled());
+        ChatUtil.message(sender, "&2&l-- Reasons to cull on: --");
         sendConfigurationSection(sender, plugin.getCslConfig().getSpawnReasons());
-        ChatUtil.message(sender,"&2&l-- Entity Limits: --");
+        ChatUtil.message(sender, "&2&l-- Entity Limits: --");
         sendConfigurationSection(sender, plugin.getCslConfig().getEntityLimits());
     }
 
@@ -79,7 +79,7 @@ public class CslCommand extends BaseCommand {
     @CommandAlias(Command.Search.ALIAS)
     @CommandPermission(Command.Search.PERMISSION)
     @Description(Command.Search.DESCRIPTION)
-    public void onSearch(final CommandSender sender,@Optional final EntityType entity) {
+    public void onSearch(final CommandSender sender, @Optional final EntityType entity) {
         if (entity != null) {
             ChatUtil.message(sender, entity.name());
             return;
@@ -96,25 +96,44 @@ public class CslCommand extends BaseCommand {
     public void onCheck(final @NotNull Player player, final @NotNull EntityType entityType) {
         final int limit = plugin.getCslConfig().getEntityLimit(entityType.name());
         int size = 0;
-        final Chunk chunk = player.getLocation().getWorld().getChunkAt(player.getLocation());
-        for (final Entity entity: chunk.getEntities()) {
+        final WeakReference<Chunk> weakChunk = new WeakReference<>(player.getLocation().getWorld().getChunkAt(player.getLocation()));
+        if (weakChunk.get() == null) {
+            ChatUtil.message(player, "Chunk was unloaded.. somehow");
+            return;
+        }
+
+        final Chunk chunk = weakChunk.get();
+        for (final Entity entity : chunk.getEntities()) {
             if (entity.getType() == entityType) {
                 size++;
             }
         }
 
-        ChatUtil.message(player,"EntityType %s Limit: %d, Size: %d", entityType.name(), limit, size );
+        ChatUtil.message(player, "EntityType %s Limit: %d, Size: %d", entityType.name(), limit, size);
     }
 
 
+    /**
+     * This function handles the help command for the ChunkSpawnerLimiter plugin.
+     *
+     * @param help An instance of the CommandHelp class, which provides methods for displaying help information.
+     */
     @HelpCommand
     public void onHelp(final CommandHelp help) {
         help.showHelp();
     }
 
-    private void sendConfigurationSection(final CommandSender sender,final @NotNull ConfigurationSection section) {
-        for(Map.Entry<String,Object> entry: section.getValues(false).entrySet()) {
-            ChatUtil.message(sender,"%s: %s",entry.getKey(),entry.getValue().toString());
+    /**
+     * This function sends the contents of a given ConfigurationSection to a CommandSender.
+     * It iterates through the key-value pairs of the section and sends each key-value pair
+     * as a formatted message to the sender.
+     *
+     * @param sender  The CommandSender to whom the messages will be sent.
+     * @param section The ConfigurationSection from which the key-value pairs will be retrieved.
+     */
+    private void sendConfigurationSection(final CommandSender sender, final @NotNull ConfigurationSection section) {
+        for (Map.Entry<String, Object> entry : section.getValues(false).entrySet()) {
+            ChatUtil.message(sender, "%s: %s", entry.getKey(), entry.getValue().toString());
         }
     }
 }

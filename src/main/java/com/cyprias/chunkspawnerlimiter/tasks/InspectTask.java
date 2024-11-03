@@ -12,14 +12,35 @@ import java.lang.ref.WeakReference;
 
 import static com.cyprias.chunkspawnerlimiter.listeners.WorldListener.checkChunk;
 
+/**
+ * A BukkitRunnable task that inspects a chunk for potential spawner issues.
+ * The task checks if the chunk is loaded and then calls the checkChunk method.
+ * If the chunk is not loaded, the task cancels itself.
+ */
 public class InspectTask extends BukkitRunnable {
-    private final WeakReference<Chunk> refChunk; //todo suspect memory leak
+    /**
+     * A WeakReference to the chunk being inspected.
+     * This is used to prevent memory leaks when the chunk is garbage collected.
+     */
+    private final WeakReference<Chunk> refChunk;
+
+    /**
+     * The ID of the task, used to cancel the task if necessary.
+     */
     private int id;
 
+    /**
+     * {@inheritDoc}
+     *
+     * Performs the inspection of the chunk.
+     * If the chunk is null, logs a message and returns.
+     * If the chunk is not loaded, cancels the task.
+     * Otherwise, calls the checkChunk method.
+     */
     @Override
     public void run() {
         final Chunk chunk = this.refChunk.get();
-        if (chunk == null) {
+        if (chunk == null || !chunk.isLoaded()) {
             Bukkit.getLogger().fine("Chunk is null! Ignoring");
             return;
         }
@@ -32,10 +53,20 @@ public class InspectTask extends BukkitRunnable {
         checkChunk(chunk);
     }
 
+    /**
+     * Constructs a new InspectTask for the given chunk.
+     *
+     * @param chunk The chunk to be inspected
+     */
     public InspectTask(final Chunk chunk) {
         this.refChunk = new WeakReference<>(chunk);
     }
 
+    /**
+     * Sets the ID of the task.
+     *
+     * @param id The ID of the task
+     */
     public void setId(final int id) {
         this.id = id;
     }
