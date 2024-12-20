@@ -8,6 +8,29 @@ plugins {
 version = "4.3.10"
 description = "Limit entities in chunks."
 
+val customMavenLocal = System.getProperty("SELF_MAVEN_LOCAL_REPO")
+if (customMavenLocal != null) {
+    val mavenLocalDir = file(customMavenLocal)
+    if (mavenLocalDir.isDirectory) {
+        println("Using SELF_MAVEN_LOCAL_REPO at: $customMavenLocal")
+        repositories {
+            maven {
+                url = uri("file://${mavenLocalDir.absolutePath}")
+            }
+        }
+    } else {
+        logger.error("TrueOG Bootstrap not found, defaulting to ~/.m2 for mavenLocal()")
+    }
+} else {
+    logger.error("TrueOG Bootstrap not found, defaulting to ~/.m2 to mavenLocal()")
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    mavenLocal()
+}
+
 dependencies {
     compileOnly(libs.spigot.api)
 
