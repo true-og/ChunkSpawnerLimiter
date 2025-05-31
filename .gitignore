@@ -1,9 +1,10 @@
 .idea
 target
-
 *.iml
 sonar.txt
 dependency-reduced-pom.xml
-
+.classpath
+.project
+.settings/
 .gradle
 build

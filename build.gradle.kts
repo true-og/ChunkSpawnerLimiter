@@ -2,7 +2,8 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
     java
-    alias(libs.plugins.shadow)
+    eclipse
+	alias(libs.plugins.shadow)
     alias(libs.plugins.plugin.yml)
 }
 version = "4.3.10"
@@ -29,6 +30,9 @@ repositories {
     mavenCentral()
     gradlePluginPortal()
     mavenLocal()
+	maven {
+		url = uri("https://repo.aikar.co/content/groups/aikar/")
+    }
 }
 
 dependencies {
